@@ -14,7 +14,7 @@ task mcp:contract
 docker compose up --build qaragon-mcp
 ```
 
-Connect an MCP client to `http://localhost:8085/mcp`. The health endpoint is `http://localhost:8085/healthz`. A full local stack starts the service with `task up` after generating both public catalog inputs.
+Connect an MCP client to `http://localhost:8085/mcp`. The health endpoint is `http://localhost:8085/healthz`, and the public OpenAPI document is `http://localhost:8085/openapi.json`. A full local stack starts the service with `task up` after generating both public catalog inputs.
 
 The service expects these files at startup:
 
@@ -37,6 +37,11 @@ Prompt: `build_tenant_integration`.
 | `OPENAPI_PATH` | `/app/generated/public-openapi.json` | Public contract input |
 | `WEBHOOK_EVENTS_PATH` | `/app/generated/webhook-events.json` | Public webhook event list |
 | `GUIDES_DIR` | `/app/content/guides` | Curated Markdown bundle |
+| `PLATFORM_API_URL` | `localhost` | Public API hostname in the OpenAPI `servers` field; use a bare hostname |
 | `MCP_ALLOWED_HOSTS` | `localhost,127.0.0.1,mcp.qaragon.com` | Host header allow-list |
+
+Staging exposes the API and OpenAPI document at `https://api.staging.qaragon.com`
+and MCP at `https://mcp.staging.qaragon.com/mcp`. Production uses
+`https://api.qaragon.com` and `https://mcp.qaragon.com/mcp`.
 
 The edge overwrites `X-Real-IP` before forwarding requests. Request bodies are capped at 1 MiB, and the process applies an in-memory per-IP request limit. No requests or tool inputs are persisted.

@@ -40,6 +40,16 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("load public catalog: %w", err)
 	}
+	apiURL := envOr("PLATFORM_API_URL", "localhost")
+	apiScheme := "https"
+	if apiURL == "localhost" || apiURL == "127.0.0.1" {
+		apiScheme = "http"
+	}
+	api.Document["servers"] = []any{map[string]any{"url": apiScheme + "://" + apiURL}}
+	openAPIDocument, err := api.DocumentJSON()
+	if err != nil {
+		return fmt.Errorf("format public API contract: %w", err)
+	}
 
 	srv := mcpserver.New(api, envOr("GUIDES_DIR", defaultGuides))
 	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server {
@@ -53,6 +63,11 @@ func run() error {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok\n"))
+	})
+	mux.HandleFunc("GET /openapi.json", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/vnd.oai.openapi+json;version=3.0")
+		w.Header().Set("Cache-Control", "public, max-age=300")
+		_, _ = w.Write(openAPIDocument)
 	})
 	mux.Handle("/mcp", maxBytesHandler(maxRequestBytes, handler))
 
