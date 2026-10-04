@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -25,8 +26,12 @@ const (
 	defaultContract   = "/app/generated/public-openapi.json"
 	defaultEvents     = "/app/generated/webhook-events.json"
 	defaultGuides     = "/app/content/guides"
+	defaultSwaggerUI  = "/app/content/swagger-ui"
 	maxRequestBytes   = 1 << 20
 )
+
+//go:embed apidocs.html
+var apiDocsHTML []byte
 
 func main() {
 	if err := run(); err != nil {
@@ -64,6 +69,12 @@ func run() error {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok\n"))
 	})
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Cache-Control", "public, max-age=300")
+		_, _ = w.Write(apiDocsHTML)
+	})
+	mux.Handle("GET /docs-assets/", http.StripPrefix("/docs-assets/", http.FileServer(http.Dir(defaultSwaggerUI))))
 	mux.HandleFunc("GET /openapi.json", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/vnd.oai.openapi+json;version=3.0")
 		w.Header().Set("Cache-Control", "public, max-age=300")

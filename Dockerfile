@@ -1,3 +1,10 @@
+FROM node:22-alpine AS swagger-ui
+
+WORKDIR /tmp/swagger-ui
+RUN npm pack swagger-ui-dist@5.33.1 --pack-destination /tmp \
+    && mkdir -p /out \
+    && tar -xzf /tmp/swagger-ui-dist-5.33.1.tgz --strip-components=1 -C /out
+
 FROM golang:1.25-alpine AS build
 
 WORKDIR /src
@@ -11,6 +18,10 @@ RUN apk add --no-cache ca-certificates wget \
     && addgroup -S app && adduser -S -G app app
 WORKDIR /app
 COPY --from=build /out/qaragon-mcp /app/qaragon-mcp
+RUN mkdir -p /app/content/swagger-ui
+COPY --from=swagger-ui /out/swagger-ui.css /app/content/swagger-ui/
+COPY --from=swagger-ui /out/swagger-ui-bundle.js /app/content/swagger-ui/
+COPY --from=swagger-ui /out/swagger-ui-standalone-preset.js /app/content/swagger-ui/
 COPY generated/ /app/generated/
 COPY content/guides/ /app/content/guides/
 USER app
