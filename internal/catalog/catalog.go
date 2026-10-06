@@ -26,7 +26,15 @@ type Operation struct {
 
 // Event is a public tenant webhook event type.
 type Event struct {
-	Type string `json:"type"`
+	Type        string         `json:"type"`
+	Description string         `json:"description"`
+	DataSchema  map[string]any `json:"data_schema"`
+	ExampleData map[string]any `json:"example_data"`
+}
+
+type webhookDocument struct {
+	EnvelopeSchema map[string]any `json:"envelope_schema"`
+	Events         []Event        `json:"events"`
 }
 
 // Catalog contains the OpenAPI document and its tenant-facing operations.
@@ -34,7 +42,9 @@ type Catalog struct {
 	Document       map[string]any
 	Operations     []Operation
 	Events         []Event
+	EnvelopeSchema map[string]any
 	byID           map[string]Operation
+	byEventType    map[string]Event
 	GlobalSecurity any
 }
 
@@ -48,19 +58,36 @@ func Load(openAPIPath, eventsPath string) (*Catalog, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read webhook event catalog: %w", err)
 	}
-	var events []Event
-	if err := json.Unmarshal(eventsDocument, &events); err != nil {
+	var webhookEvents webhookDocument
+	if err := json.Unmarshal(eventsDocument, &webhookEvents); err != nil {
 		return nil, fmt.Errorf("decode webhook event catalog: %w", err)
 	}
-	if len(events) == 0 {
+	if len(webhookEvents.Events) == 0 {
 		return nil, fmt.Errorf("webhook event catalog is empty")
+	}
+	if len(webhookEvents.EnvelopeSchema) == 0 {
+		return nil, fmt.Errorf("webhook event catalog has no envelope schema")
 	}
 
 	c := &Catalog{
 		Document:       contract,
-		Events:         events,
+		Events:         webhookEvents.Events,
+		EnvelopeSchema: webhookEvents.EnvelopeSchema,
 		byID:           make(map[string]Operation),
+		byEventType:    make(map[string]Event, len(webhookEvents.Events)),
 		GlobalSecurity: contract["security"],
+	}
+	for _, event := range c.Events {
+		if event.Type == "" {
+			return nil, fmt.Errorf("webhook event catalog contains an empty event type")
+		}
+		if event.Description == "" || len(event.DataSchema) == 0 || event.ExampleData == nil {
+			return nil, fmt.Errorf("webhook event %q is missing its description, data schema, or example", event.Type)
+		}
+		if _, exists := c.byEventType[event.Type]; exists {
+			return nil, fmt.Errorf("webhook event catalog contains duplicate event type %q", event.Type)
+		}
+		c.byEventType[event.Type] = event
 	}
 	paths, ok := contract["paths"].(map[string]any)
 	if !ok || len(paths) == 0 {
@@ -163,6 +190,12 @@ func (c *Catalog) Search(query string, limit int) []Operation {
 func (c *Catalog) Operation(id string) (Operation, bool) {
 	operation, ok := c.byID[id]
 	return operation, ok
+}
+
+// Event returns a public tenant webhook event by its exact event type.
+func (c *Catalog) Event(eventType string) (Event, bool) {
+	event, ok := c.byEventType[eventType]
+	return event, ok
 }
 
 // OperationCount returns the number of indexed HTTP operations.

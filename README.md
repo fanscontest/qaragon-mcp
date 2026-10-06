@@ -19,11 +19,11 @@ Connect an MCP client to `http://localhost:8085/mcp`. The service also hosts an 
 The service expects these files at startup:
 
 - `generated/public-openapi.json`: the merged, public-auth-overlaid contract from `tools/sdk-gen/assemble-live.sh`.
-- `generated/webhook-events.json`: public webhook event names extracted from uman's tenant webhook allow-list.
+- `generated/webhook-events.json`: public webhook event schemas/examples validated against uman's allow-list and payload encoders.
 
 ## Interface
 
-Tools: `search_api`, `describe_operation`, `get_sdk_setup`, and `list_webhook_events`.
+Tools: `search_api`, `describe_operation`, `get_sdk_setup`, `list_webhook_events`, and `describe_webhook_event`.
 
 Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents.
 

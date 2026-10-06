@@ -9,7 +9,8 @@ The endpoint is public and requires no developer account or MCP credential. It p
 - `search_api` finds public operations by feature, method, path, operation ID, or tag.
 - `describe_operation` returns one operation's exact request/response details, security requirements, and referenced schemas.
 - `get_sdk_setup` provides Go or TypeScript SDK installation guidance.
-- `list_webhook_events` lists the public tenant webhook event allow-list.
+- `list_webhook_events` lists public tenant webhook event names and descriptions.
+- `describe_webhook_event` returns a public event's payload schema/example and the shared delivery envelope schema.
 
 ## Available resources and prompt
 
