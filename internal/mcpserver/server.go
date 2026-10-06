@@ -143,10 +143,11 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		if len(query) > maxSearchQuery {
 			return nil, nil, fmt.Errorf("query must be at most %d characters", maxSearchQuery)
 		}
-		events := make([]catalog.Event, 0, len(api.Events))
+		events := make([]eventSummary, 0, len(api.Events))
 		for _, event := range api.Events {
-			if query == "" || strings.Contains(strings.ToLower(event.Type), query) {
-				events = append(events, event)
+			searchable := strings.ToLower(event.Type + " " + event.Description)
+			if query == "" || strings.Contains(searchable, query) {
+				events = append(events, eventSummary{Type: event.Type, Description: event.Description})
 			}
 		}
 		return nil, eventOutput{Events: events}, nil
@@ -155,6 +156,28 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		Name:        "list_webhook_events",
 		Description: "List supported public tenant webhook event types. These are public event names, not internal broker topics.",
 	}, eventsTool)
+
+	describeWebhookEventTool := func(_ context.Context, _ *mcp.CallToolRequest, input struct {
+		EventType string `json:"event_type" jsonschema:"Exact public event type returned by list_webhook_events."`
+	}) (*mcp.CallToolResult, any, error) {
+		eventType := strings.TrimSpace(input.EventType)
+		event, ok := api.Event(eventType)
+		if !ok {
+			return nil, nil, fmt.Errorf("public webhook event %q not found; use list_webhook_events to find supported types", eventType)
+		}
+		return nil, describeWebhookEventOutput{
+			EventType:        event.Type,
+			Description:      event.Description,
+			EnvelopeSchema:   api.EnvelopeSchema,
+			DataSchema:       event.DataSchema,
+			ExampleData:      event.ExampleData,
+			DeliveryGuideURI: guideURIBase + "webhooks",
+		}, nil
+	}
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "describe_webhook_event",
+		Description: "Get the public webhook event's exact data schema and example, along with the shared delivery envelope schema and guide.",
+	}, describeWebhookEventTool)
 
 	server.AddPrompt(&mcp.Prompt{
 		Name:        "build_tenant_integration",
@@ -210,7 +233,21 @@ type guideOutput struct {
 }
 
 type eventOutput struct {
-	Events []catalog.Event `json:"events"`
+	Events []eventSummary `json:"events"`
+}
+
+type eventSummary struct {
+	Type        string `json:"type"`
+	Description string `json:"description"`
+}
+
+type describeWebhookEventOutput struct {
+	EventType        string         `json:"event_type"`
+	Description      string         `json:"description"`
+	EnvelopeSchema   map[string]any `json:"envelope_schema"`
+	DataSchema       map[string]any `json:"data_schema"`
+	ExampleData      map[string]any `json:"example_data"`
+	DeliveryGuideURI string         `json:"delivery_guide_uri"`
 }
 
 func summarize(operation catalog.Operation) operationSummary {
