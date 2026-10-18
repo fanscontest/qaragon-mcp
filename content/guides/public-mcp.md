@@ -16,6 +16,7 @@ The endpoint is public and requires no developer account or MCP credential. It p
 
 - `qaragon://api/openapi.json` is the full tenant-facing OpenAPI contract.
 - `qaragon://guides/tenant-bff`, `qaragon://guides/webhooks`, `qaragon://guides/sdk-go`, and `qaragon://guides/sdk-typescript` provide integration details.
+- `qaragon://guides/find-the-minority` explains the Game API workflow, phases, access rules, retries, and audience voting.
 - `qaragon://guides/public-mcp` explains the MCP itself.
 - `build_tenant_integration` prepares a tenant BFF design prompt from a language and app goal.
 

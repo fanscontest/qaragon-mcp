@@ -25,9 +25,11 @@ The service expects these files at startup:
 
 Tools: `search_api`, `describe_operation`, `get_sdk_setup`, `list_webhook_events`, and `describe_webhook_event`.
 
-Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents.
+Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`.
 
 Prompt: `build_tenant_integration`.
+
+The Find the Minority workflow is published as `qaragon://guides/find-the-minority`. Its canonical source is `uman/docs/games/find-the-minority.md`; copy it into `content/guides/find-the-minority.md` when updating the tenant-facing flow. The public OpenAPI bundle is assembled separately from the live service contracts.
 
 ## Configuration
 
