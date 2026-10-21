@@ -19,11 +19,12 @@ const (
 )
 
 var guideFiles = map[string]string{
-	"tenant-bff":     "tenant-bff.md",
-	"webhooks":       "webhooks.md",
-	"sdk-go":         "sdk-go.md",
-	"sdk-typescript": "sdk-typescript.md",
-	"public-mcp":     "public-mcp.md",
+	"tenant-bff":        "tenant-bff.md",
+	"webhooks":          "webhooks.md",
+	"sdk-go":            "sdk-go.md",
+	"sdk-typescript":    "sdk-typescript.md",
+	"public-mcp":        "public-mcp.md",
+	"find-the-minority": "find-the-minority.md",
 }
 
 // New registers tools, prompts, and resources backed only by public artifacts.
@@ -192,8 +193,12 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		if len(language) > 80 || len(goal) > 600 {
 			return nil, fmt.Errorf("language must be at most 80 characters and goal at most 600 characters")
 		}
-		text := fmt.Sprintf("Help me design a %s tenant BFF integration for this goal: %s\n\nUse only the supplied public Qaragon contract and integration guidance. The tenant BFF authenticates its own user and enforces its own permissions on every request. It calls Qaragon server-to-server using a tenant API key stored in its own secret configuration and sends X-Acting-As with the platform identity ID when acting for a fan. Never put the tenant API key in a client app or generated source code. The MCP server is documentation-only and does not make Qaragon API calls.\n\nIntegration guide:\n%s\n\nSDK guidance:\n%s",
-			language, goal, guides["tenant-bff"], sdkGuideFor(language, guides))
+		gameGuide := ""
+		if strings.Contains(strings.ToLower(goal), "minority") {
+			gameGuide = "\n\nFind the Minority game guide:\n" + guides["find-the-minority"]
+		}
+		text := fmt.Sprintf("Help me design a %s tenant BFF integration for this goal: %s\n\nUse only the supplied public Qaragon contract and integration guidance. The tenant BFF authenticates its own user and enforces its own permissions on every request. It calls Qaragon server-to-server using a tenant API key stored in its own secret configuration and sends X-Acting-As with the platform identity ID when acting for a fan. Never put the tenant API key in a client app or generated source code. The MCP server is documentation-only and does not make Qaragon API calls.\n\nIntegration guide:\n%s\n\nSDK guidance:\n%s%s",
+			language, goal, guides["tenant-bff"], sdkGuideFor(language, guides), gameGuide)
 		return &mcp.GetPromptResult{
 			Description: "Tenant-owned backend integration plan grounded in Qaragon's public API contract.",
 			Messages:    []*mcp.PromptMessage{{Role: "user", Content: &mcp.TextContent{Text: text}}},
