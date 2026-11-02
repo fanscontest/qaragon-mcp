@@ -29,7 +29,15 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer session.Close()
-	for _, test := range []struct{ guide, goal, want string }{{"fans-say", "Build qaragon://guides/fans-say", "Ten in Sixty"}, {"fans-say", "Offer seven-clues", "Ten in Sixty"}, {"fans-say", "Offer ten-in-sixty", "Seven Clues"}, {"fans-say", "Offer fans_say", "Ten in Sixty"}, {"fans-feud", "Build a Feud Rush game", "Feud Showdown"}, {"fans-say", "Offer Seven Clues", "Ten in Sixty"}} {
+	for _, test := range []struct{ guide, goal, want string }{
+		{"link-up", "Build Link Rush", "Link Clash"},
+		{"fans-say", "Build qaragon://guides/fans-say", "Ten in Sixty"},
+		{"fans-say", "Offer seven-clues", "Ten in Sixty"},
+		{"fans-say", "Offer ten-in-sixty", "Seven Clues"},
+		{"fans-say", "Offer fans_say", "Ten in Sixty"},
+		{"fans-feud", "Build a Feud Rush game", "Feud Showdown"},
+		{"fans-say", "Offer Seven Clues", "Ten in Sixty"},
+	} {
 		t.Run(test.guide, func(t *testing.T) {
 			resource, err := session.ReadResource(ctx, &mcp.ReadResourceParams{URI: guideURIBase + test.guide})
 			if err != nil {
