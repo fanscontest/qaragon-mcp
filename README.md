@@ -25,7 +25,7 @@ The service expects these files at startup:
 
 Tools: `search_api`, `describe_operation`, `get_sdk_setup`, `list_webhook_events`, and `describe_webhook_event`.
 
-Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`.
+Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`, `qaragon://guides/fans-say` and `qaragon://guides/fans-feud`.
 
 Prompt: `build_tenant_integration`.
 
@@ -48,3 +48,9 @@ the OpenAPI document at `https://api.staging.qaragon.com/openapi.json`, and MCP 
 `https://api.qaragon.com` and `https://mcp.qaragon.com/mcp`.
 
 The edge overwrites `X-Real-IP` before forwarding requests. Request bodies are capped at 1 MiB, and the process applies an in-memory per-IP request limit. No requests or tool inputs are persisted.
+
+The word-game guides cover full and standalone offerings: Fans Say, Seven Clues, Ten in Sixty, Fans Feud, Feud Showdown and Feud Rush. Their canonical sources are `uman/docs/games/fans-say.md` and `uman/docs/games/fans-feud.md`. Keep the copies in `content/guides/` aligned when updating the API flow. The integration prompt includes the matching Game guide for these names.
+
+### Game guide rollout order
+
+Deploy Uman with Fans Feud support (PR #325) before releasing the Fans Feud MCP guide. Merging the backend PR alone does not make its Game types available on the API. Verify the target environment exposes those types before publishing the matching guide and integration prompt.

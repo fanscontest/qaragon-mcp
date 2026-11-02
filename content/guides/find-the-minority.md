@@ -4,7 +4,7 @@ Find the Minority is a Qaragon-owned game API for a host-led social deduction ga
 
 The game works without an audience. Audience voting is optional and uses a separate Space. The API does not connect to TikTok, YouTube, Twitch, or read their chat or gifts.
 
-Use the public OpenAPI contract for exact request and response schemas. This guide explains the workflow. Do not access the Game's internal Vote contests through Contest endpoints.
+Use the public OpenAPI contract for exact request and response schemas. This guide explains the workflow. Do not access the Game's managed Vote contests through Contest endpoints.
 
 ## Caller identity and access
 
@@ -18,13 +18,13 @@ The host selects 5–10 Player Space members for each round; the host cannot be 
 
 All paths below are relative to `/v2`. Responses use the standard Qaragon `data` envelope.
 
-1. **Create the game.** `POST /games` with `{"type":"find_the_minority","player_space_id":"..."}`. Add `audience_space_id` to enable an audience. Store the returned Game ID in the tenant BFF; there is no Game list endpoint.
+1. **Create the game.** `POST /games` with `{"type":"find_the_minority","player_space_id":"..."}`. Add `audience_space_id` to enable an audience. Save the returned Game ID for links. The host, players, and audience members can find their Games with `GET /games?limit=50` and follow `pagination.next_cursor` for more pages. The list includes each Game's `viewer_role` and is scoped to the acting identity and tenant. A Game appears for a player or audience member while their Space membership is approved.
 2. **Start a round.** The host calls `POST /games/{id}/rounds` with a question, exactly two options with IDs `A` and `B`, and the round's `player_identity_ids`. The IDs must be distinct approved members of the Player Space. This command requires an `Idempotency-Key`. There are no automatic phase timers; the host advances the game when ready.
-3. **Collect private answers.** Each selected player reads `GET /games/{id}` and submits exactly one answer using `POST /games/{id}/participate`, with `{"option_ids":["A"]}` or `{"option_ids":["B"]}`. A submitted ballot is final. The response means it was accepted into the shared submission queue; refresh the Game to observe the persisted answer. The host sees only the submitted count, not the answers.
+3. **Collect private answers.** Each selected player reads `GET /games/{id}` and submits exactly one answer to `POST /submissions`, for example `{"target":{"type":"game","id":"<game-id>"},"payload":{"option_ids":["A"]}}`. A submitted ballot is final. The `202 Accepted` response is a queue receipt; refresh the Game to observe the persisted answer. The host sees only the submitted count, not the answers.
 4. **Lock answers.** The host sends `{"action":"lock_answers"}` to `POST /games/{id}/actions`. Qaragon closes answer acceptance and assigns roles from persisted responses. If the response is `409 BALLOTS_PROCESSING`, accepted submissions are still being processed. Retry the action with a new `Idempotency-Key` after they settle.
 5. **Continue based on the outcome.** For a normal unequal split, respondents privately learn their Majority or Minority role and the round enters discussion. An equal split, unanimous answers, or no answers has no Minority: call `reveal_next` once to complete that special round. Special rounds award no points and skip audience and accusation voting.
-6. **Optionally run the audience poll.** For a normal round with an Audience Space, the host can open voting with `open_audience_voting`. Each eligible viewer submits one final suspect choice through the same Game participation endpoint, using the respondent's Platform Identity ID as the option. Viewers cannot change a submitted vote. The host closes the poll with `close_audience_voting`; if it returns `409 BALLOTS_PROCESSING`, retry with a new key after accepted ballots settle. The host may show or hide the live tally to players and audience separately with `set_board_visibility`, and may reveal the frozen result with `reveal_audience_verdict`.
-7. **Run player accusations.** The host calls `open_accusations`. If the audience poll was configured but never opened, this action closes it automatically. If it was opened, it must be closed first. Respondents then submit one private accusation each through `/participate`, selecting another respondent; self-votes are rejected. The host calls `lock_accusations`. If it returns `409 BALLOTS_PROCESSING`, retry with a new key after accepted ballots settle.
+6. **Optionally run the audience poll.** For a normal round with an Audience Space, the host can open voting with `open_audience_voting`. Each eligible viewer submits one final suspect choice through `POST /submissions` with the Game target, using the respondent's Platform Identity ID as the option. The host, selected players, and Player Space members cannot cast audience votes, even if they also joined the Audience Space. Viewers cannot change a submitted vote. The host closes the poll with `close_audience_voting`; if it returns `409 BALLOTS_PROCESSING`, retry with a new key after accepted ballots settle. The host may show or hide the live tally to players and audience separately with `set_board_visibility`, and may reveal the frozen result with `reveal_audience_verdict`.
+7. **Run player accusations.** The host calls `open_accusations`. If the audience poll was configured but never opened, this action closes it automatically. If it was opened, it must be closed first. Respondents then submit one private accusation each through `POST /submissions` with the Game target, selecting another respondent; self-votes are rejected. The host calls `lock_accusations`. If it returns `409 BALLOTS_PROCESSING`, retry with a new key after accepted ballots settle.
 8. **Reveal and continue.** The host calls `reveal_next` three times. The stages reveal the Minority option and counts, the uniquely top-accused player's answer (or no accused player on a tie), then all respondents' answers. Points are applied at the final stage. Start another round only after the previous round is complete, or call `end` to end the Game.
 
 Host commands use `POST /games/{id}/actions` with an `action` value: `lock_answers`, `open_audience_voting`, `close_audience_voting`, `set_board_visibility`, `reveal_audience_verdict`, `open_accusations`, `lock_accusations`, `reveal_next`, or `end`. `set_board_visibility` also accepts `board_to_players` and `board_to_audience` booleans.
@@ -32,6 +32,8 @@ Host commands use `POST /games/{id}/actions` with an `action` value: `lock_answe
 ## Views, privacy, and scoring
 
 Use `GET /games/{id}` to refresh the view after a command or ballot. The Game API has no Game-specific real-time subscription; the tenant app should refresh the view or use its own notification mechanism.
+
+The response includes `viewer_role` (`host`, `player`, or `audience`) so clients can render the right controls. A player sees `own_answer` and `own_accusation` after their respective ballots are recorded; an audience member sees `own_audience_vote` after theirs is recorded. The two audience-board visibility flags in the round view let the host render the current settings. A missing `own_*` field after a `202 Accepted` receipt means the queued ballot has not been recorded yet; keep refreshing the Game before allowing another submission.
 
 - Only the host can issue host commands. The host sees ballot counts and the audience tally, but not hidden player answers or roles.
 - A player sees their own answer and role. Other players' answers and roles remain hidden until the staged reveal.
@@ -43,10 +45,14 @@ The `phase`, `audience_poll_state`, and `reveal_stage` in the Game view indicate
 
 ## Retries and implementation boundary
 
-`/rounds` and `/actions` require an `Idempotency-Key`. `/games` and `/participate` accept the key for safe retries; it is optional there. Use a unique key for each logical request and reuse it only to replay that same request. When a command returns `BALLOTS_PROCESSING`, retry as a new command with a new key. The participant submission itself remains one final ballot per identity per phase.
+`/rounds` and `/actions` require an `Idempotency-Key`. `/games` and `/submissions` accept the key for safe retries; it is optional there. Use a unique key for each logical request and reuse it only to replay that same request. When a command returns `BALLOTS_PROCESSING`, retry as a new command with a new key. The participant submission itself remains one final ballot per identity per phase.
 
-The Game resolves its active Vote internally and sends accepted ballots through Qaragon's shared participation and submission pipeline. It returns Game views and submission receipts, not child Contest IDs. Do not create, read, tally, close, or submit against the internal child Vote contests directly.
+The Game resolves its active Vote internally and sends accepted ballots through Qaragon's shared participation and submission pipeline. It returns Game views and submission receipts, not child Contest IDs. Do not create, read, tally, close, or submit against the managed child Vote contests directly.
 
 ## MCP discovery
 
 In the Qaragon MCP, use `search_api` with `Find the Minority` or `/games`, then `describe_operation` for the exact contract. Read `qaragon://guides/find-the-minority` for this workflow. The MCP is documentation-only; tenant BFFs make authenticated API calls themselves.
+
+## Game-type discovery
+
+The shared `GET /v2/games` collection now includes supported Game types. A Find the Minority-specific hub should request `GET /v2/games?type=find_the_minority` and keep using the returned `type` when choosing its UI. Individual Game reads and actions dispatch by Game ID; the existing Find the Minority round flow is unchanged.
