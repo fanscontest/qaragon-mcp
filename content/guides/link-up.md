@@ -35,7 +35,7 @@ Preparation uses the additive shared content library before generating/reviewing
 
 ## Shared participant endpoint
 
-Every participant action uses **`POST /v2/submissions`** with a fresh `Idempotency-Key`. Every accepted Link action is processed immediately and returns HTTP 200 with a committed receipt. Its `result.type` is `link_up`; `result.game.type` identifies the selected definition. Host pacing actions use `POST /v2/games/{id}/actions`.
+Every participant action uses **`POST /v2/submissions`** with a fresh `Idempotency-Key`. Every accepted Link action is processed immediately and returns HTTP 200 with a committed receipt. Its `result.type` is `link_up`; `result.game.type` identifies the selected definition. Host pacing actions use `POST /v2/games/{id}/actions`. For safe host-action retries, send a fresh `Idempotency-Key` for each logical action and reuse it only for the identical request. The host-action header is optional in the current API; Link participant submissions require it.
 
 A player first selects the top or bottom available word:
 
@@ -126,8 +126,8 @@ Use `GET /v2/games/{id}` for safe snapshots and `GET /v2/games?type=link_up` (or
 
 `GET /v2/submissions/{id}` and attempt lists preserve validated normalized action inputs, including direction, wager and ordered pairs. These reads are tenant-authorized; the BFF must enforce its own user access and must not broadcast raw attempt history. Private content and inference continuations are never normalized participant input.
 
-A terminal Game emits one `uman.game.completed` event through the existing outbox/webhook path. Its result provides winner identity IDs and the configured Qaragon reward. Full Link Up qualification alone issues no reward. Child Contest scores are primitive records; they do not replace the Game's team banks or final winners.
+Tenants subscribe to the public `game.completed` webhook through the existing subscription API. A terminal Game publishes one completion occurrence through the outbox/webhook path. Its result provides winner identity IDs and the configured Qaragon reward. Full Link Up qualification alone issues no reward. Child Contest scores are primitive records; they do not replace the Game's team banks or final winners.
 
-Startup migrates `link_up_games`, `link_up_drafts`, `link_up_library` and `link_up_brief_profiles`. The existing workers register a one-second deadline sweep, recovering persisted clocks after restarts. Deploy API and workers together. Link uses the platform's existing AI provider/key/model environment; no new model service is required. Credentialed content-quality evaluation remains a release check.
+Startup migrates `link_up_games`, `link_up_drafts`, `link_up_library` and `link_up_brief_profiles`. The existing workers register a one-second deadline sweep, recovering persisted clocks after restarts. Deploy API and workers together. Release the matching MCP guide only after Uman with Link Up support (PR #326) is deployed in the target environment; merging the backend PR alone does not make its Game types available. Link uses the platform's existing AI provider/key/model environment; no new model service is required. Credentialed content-quality evaluation remains a release check.
 
 Authorized platform content operators can enqueue additive prefill through `POST /v2/admin/games/link-up/library/generate` with `type`, `brief` and positive `sets`, and poll `/v2/admin/games/link-up/library/generations/{id}`. This is a manual operation, has no scheduled paid generation and never resets the library. Completed sets remain if a later set fails; automatic paid retries are disabled. The current queue's batch timeout still limits very large manual requests.
