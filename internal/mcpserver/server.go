@@ -199,7 +199,7 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		if strings.Contains(strings.ToLower(goal), "minority") {
 			gameGuide = "\n\nFind the Minority game guide:\n" + guides["find-the-minority"]
 		}
-		goalText := strings.ToLower(goal)
+		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
 		if strings.Contains(goalText, "feud") {
 			gameGuide += "\n\nFans Feud / Feud Showdown / Feud Rush guide:\n" + guides["fans-feud"]
 		}

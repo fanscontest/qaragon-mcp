@@ -4,6 +4,9 @@ import (
 	"context"
 	"github.com/fanscontest/qaragon-mcp/internal/catalog"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"net/url"
+	"os"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -26,7 +29,7 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer session.Close()
-	for _, test := range []struct{ guide, goal, want string }{{"fans-feud", "Build a Feud Rush game", "Feud Showdown"}, {"fans-say", "Offer Seven Clues", "Ten in Sixty"}} {
+	for _, test := range []struct{ guide, goal, want string }{{"fans-say", "Build qaragon://guides/fans-say", "Ten in Sixty"}, {"fans-say", "Offer seven-clues", "Ten in Sixty"}, {"fans-say", "Offer ten-in-sixty", "Seven Clues"}, {"fans-say", "Offer fans_say", "Ten in Sixty"}, {"fans-feud", "Build a Feud Rush game", "Feud Showdown"}, {"fans-say", "Offer Seven Clues", "Ten in Sixty"}} {
 		t.Run(test.guide, func(t *testing.T) {
 			resource, err := session.ReadResource(ctx, &mcp.ReadResourceParams{URI: guideURIBase + test.guide})
 			if err != nil {
@@ -44,5 +47,31 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 				t.Fatalf("integration prompt omitted Game guide: %+v", prompt)
 			}
 		})
+	}
+}
+
+func TestBundledGuideLinksUseResolvableResources(t *testing.T) {
+	links := regexp.MustCompile(`\[[^\]]+\]\(([^)]+)\)`)
+	for name, file := range guideFiles {
+		body, err := os.ReadFile("../../content/guides/" + file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, match := range links.FindAllStringSubmatch(string(body), -1) {
+			target, err := url.Parse(match[1])
+			if err != nil {
+				t.Errorf("guide %s: invalid link %q", name, match[1])
+				continue
+			}
+			if !target.IsAbs() {
+				t.Errorf("guide %s: relative link %q cannot resolve from a standalone MCP resource", name, match[1])
+				continue
+			}
+			if target.Scheme == "qaragon" && match[1] != apiResourceURI {
+				if _, ok := guideFiles[strings.TrimPrefix(target.Path, "/")]; target.Host != "guides" || !ok {
+					t.Errorf("guide %s: unpublished MCP resource %q", name, match[1])
+				}
+			}
+		}
 	}
 }
