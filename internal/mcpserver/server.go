@@ -26,8 +26,9 @@ var guideFiles = map[string]string{
 	"public-mcp":        "public-mcp.md",
 	"find-the-minority": "find-the-minority.md",
 	"fans-say":          "fans-say.md",
-	"link-up":           "link-up.md",
+	"word-chain":        "word-chain.md",
 	"fans-feud":         "fans-feud.md",
+	"community-guess":   "community-guess.md",
 }
 
 // New registers tools, prompts, and resources backed only by public artifacts.
@@ -201,19 +202,31 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 			gameGuide = "\n\nFind the Minority game guide:\n" + guides["find-the-minority"]
 		}
 		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
-		if strings.Contains(goalText, "feud") {
-			gameGuide += "\n\nFans Feud / Feud Showdown / Feud Rush guide:\n" + guides["fans-feud"]
-		}
-		for _, name := range []string{"link up", "link_up", "link clash", "link_clash", "link rush", "link_rush"} {
+		community := false
+		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess"} {
 			if strings.Contains(goalText, name) {
-				gameGuide += "\n\nLink Up / Link Clash / Link Rush guide:\n" + guides["link-up"]
+				community = true
 				break
 			}
 		}
-		for _, name := range []string{"fans say", "fans_say", "seven clues", "seven_clues", "ten in sixty", "ten_in_sixty"} {
-			if strings.Contains(goalText, name) {
-				gameGuide += "\n\nFans Say / Seven Clues / Ten in Sixty guide:\n" + guides["fans-say"]
-				break
+		if community {
+			gameGuide += "\n\nCommunity Guess guide:\n" + guides["community-guess"]
+		}
+		if !community {
+			if strings.Contains(goalText, "feud") {
+				gameGuide += "\n\nFans Feud / Feud Showdown / Feud Rush guide:\n" + guides["fans-feud"]
+			}
+			for _, name := range []string{"word chain", "word_chain", "link clash", "link_clash", "link rush", "link_rush"} {
+				if strings.Contains(goalText, name) {
+					gameGuide += "\n\nWord Chain / Link Clash / Link Rush guide:\n" + guides["word-chain"]
+					break
+				}
+			}
+			for _, name := range []string{"fans say", "fans_say", "seven clues", "seven_clues", "ten in sixty", "ten_in_sixty"} {
+				if strings.Contains(goalText, name) {
+					gameGuide += "\n\nFans Say / Seven Clues / Ten in Sixty guide:\n" + guides["fans-say"]
+					break
+				}
 			}
 		}
 		text := fmt.Sprintf("Help me design a %s tenant BFF integration for this goal: %s\n\nUse only the supplied public Qaragon contract and integration guidance. The tenant BFF authenticates its own user and enforces its own permissions on every request. It calls Qaragon server-to-server using a tenant API key stored in its own secret configuration and sends X-Acting-As with the platform identity ID when acting for a fan. Never put the tenant API key in a client app or generated source code. The MCP server is documentation-only and does not make Qaragon API calls.\n\nIntegration guide:\n%s\n\nSDK guidance:\n%s%s",
