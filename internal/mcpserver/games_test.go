@@ -31,6 +31,8 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 	defer session.Close()
 	for _, test := range []struct{ guide, goal, want string }{
 		{"link-up", "Build qaragon://guides/link-up", "Link Clash"},
+		{"community-guess", "Build Word Links community contests", "one final"},
+		{"community-guess", "Build non-hosted Fans Say", "final_board"},
 		{"link-up", "Host link-clash", "Link Rush"},
 		{"link-up", "Offer link-rush", "Link Clash"},
 		{"link-up", "Host link_up", "Link Clash"},
