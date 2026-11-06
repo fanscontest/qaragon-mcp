@@ -22,4 +22,4 @@ The endpoint is public and requires no developer account or MCP credential. It p
 
 Ask your MCP client to find an operation for a feature, explain its schemas, or outline a tenant BFF flow. Keep user authentication and tenant policy in your own BFF, and keep the tenant API key server-side.
 
-Use `qaragon://guides/community-guess` for non-hosted Word Links, Fans Say and Fans Feud community Contests with final-board Guess submissions. Hosted Game guides describe a different workflow.
+Use `qaragon://guides/community-guess` for non-hosted Word Chain, Fans Say and Fans Feud community Contests with final-board Guess submissions. Hosted Game guides describe a different workflow.

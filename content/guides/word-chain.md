@@ -1,10 +1,10 @@
-# Link Up integration guide
+# Word Chain integration guide
 
 Qaragon offers three definitions through the shared Game API:
 
 | `type` | Stages | Reward |
 | --- | --- | --- |
-| `link_up` | Link Clash → Link Rush | Qualified roster, if Rush succeeds |
+| `word_chain` | Link Clash → Link Rush | Qualified roster, if Rush succeeds |
 | `link_clash` | Four-round competitive match | Winning team |
 | `link_rush` | Three-chain cooperative challenge | Supplied roster, if successful |
 
@@ -14,13 +14,13 @@ Link Clash and Link Rush are independently playable modules. The full definition
 
 The tenant BFF authenticates its users and calls Qaragon server-to-server with its tenant key. Use `X-Acting-As` for the host or current player. Every player needs a Platform Identity and approved membership of the player Space. The host needs authority to create games there and cannot play: they can preview the full answer key.
 
-1. `POST /v2/games/drafts` with `{"type":"link_up","brief":"Everyday expressions for friends"}`. The creator-only response includes the draft ID, revision and complete chains.
+1. `POST /v2/games/drafts` with `{"type":"word_chain","brief":"Everyday expressions for friends"}`. The creator-only response includes the draft ID, revision and complete chains.
 2. Optionally `POST /v2/games/drafts/{id}/rotate` with `{"revision":1,"board_index":0}` or `{"revision":1,"all":true}`. Rotation returns a new revision. It is only available before creation.
 3. `POST /v2/games` commits that draft, roster, Space and configured reward:
 
 ```json
 {
-  "type": "link_up",
+  "type": "word_chain",
   "player_space_id": "SPACE_ID",
   "draft_id": "DRAFT_ID",
   "draft_revision": 1,
@@ -31,11 +31,11 @@ The tenant BFF authenticates its users and calls Qaragon server-to-server with i
 
 For standalone `link_rush`, use `player_identity_ids` with 2–5 identities instead of `teams`. Competitive definitions require two equal teams of 2–5. A submitted draft revision is immutable after creation.
 
-Preparation uses the additive shared content library before generating/reviewing compatible new content. Clash prepares eight chains (four main, three Speed Chains, one reserved tiebreak); Rush prepares three; full Link Up prepares eleven. AI prepares content before play. There is no live inference during guessing. Without a configured AI key, development uses deterministic sample content through the same draft flow. Never expose draft content to players or spectators.
+Preparation uses the additive shared content library before generating/reviewing compatible new content. Clash prepares eight chains (four main, three Speed Chains, one reserved tiebreak); Rush prepares three; full Word Chain prepares eleven. AI prepares content before play. There is no live inference during guessing. Without a configured AI key, development uses deterministic sample content through the same draft flow. Never expose draft content to players or spectators.
 
 ## Shared participant endpoint
 
-Every participant action uses **`POST /v2/submissions`** with a fresh `Idempotency-Key`. Every accepted Link action is processed immediately and returns HTTP 200 with a committed receipt. Its `result.type` is `link_up`; `result.game.type` identifies the selected definition. Host pacing actions use `POST /v2/games/{id}/actions`. For safe host-action retries, send a fresh `Idempotency-Key` for each logical action and reuse it only for the identical request. The host-action header is optional in the current API; Link participant submissions require it.
+Every participant action uses **`POST /v2/submissions`** with a fresh `Idempotency-Key`. Every accepted Link action is processed immediately and returns HTTP 200 with a committed receipt. Its `result.type` is `word_chain`; `result.game.type` identifies the selected definition. Host pacing actions use `POST /v2/games/{id}/actions`. For safe host-action retries, send a fresh `Idempotency-Key` for each logical action and reuse it only for the identical request. The host-action header is optional in the current API; Link participant submissions require it.
 
 A player first selects the top or bottom available word:
 
@@ -84,7 +84,7 @@ Read `game.clash.phase`, `chain_id`, `action_version`, `active_identity_id`, `te
 | `tie_choice` | Designated player submits `choose` |
 | `tie_ready` | Host `open_speed` |
 | `tie` | Assigned team's designated player submits `speed` |
-| Qualified in full Link Up | Host `open_rush` |
+| Qualified in full Word Chain | Host `open_rush` |
 
 Host action example:
 
@@ -122,12 +122,12 @@ Read `game.rush`: `state`, ordered `player_identity_ids`, `active_identity_id`, 
 
 ## Reads, completion and operational setup
 
-Use `GET /v2/games/{id}` for safe snapshots and `GET /v2/games?type=link_up` (or a standalone type) for accessible discovery. Receipts contain the same safe Game projection, so a BFF need not reread after every player action. Fanout/polling follows the tenant's existing approach; this feature adds no separate realtime transport.
+Use `GET /v2/games/{id}` for safe snapshots and `GET /v2/games?type=word_chain` (or a standalone type) for accessible discovery. Receipts contain the same safe Game projection, so a BFF need not reread after every player action. Fanout/polling follows the tenant's existing approach; this feature adds no separate realtime transport.
 
 `GET /v2/submissions/{id}` and attempt lists preserve validated normalized action inputs, including direction, wager and ordered pairs. These reads are tenant-authorized; the BFF must enforce its own user access and must not broadcast raw attempt history. Private content and inference continuations are never normalized participant input.
 
-Tenants subscribe to the public `game.completed` webhook through the existing subscription API. A terminal Game publishes one completion occurrence through the outbox/webhook path. Its result provides winner identity IDs and the configured Qaragon reward. Full Link Up qualification alone issues no reward. Child Contest scores are primitive records; they do not replace the Game's team banks or final winners.
+Tenants subscribe to the public `game.completed` webhook through the existing subscription API. A terminal Game publishes one completion occurrence through the outbox/webhook path. Its result provides winner identity IDs and the configured Qaragon reward. Full Word Chain qualification alone issues no reward. Child Contest scores are primitive records; they do not replace the Game's team banks or final winners.
 
-Startup migrates `link_up_games`, `link_up_drafts`, `link_up_library` and `link_up_brief_profiles`. The existing workers register a one-second deadline sweep, recovering persisted clocks after restarts. Deploy API and workers together. Release the matching MCP guide only after Uman with Link Up support (PR #326) is deployed in the target environment; merging the backend PR alone does not make its Game types available. Link uses the platform's existing AI provider/key/model environment; no new model service is required. Credentialed content-quality evaluation remains a release check.
+Startup migrates `word_chain_games`, `word_chain_drafts`, `word_chain_library` and `word_chain_brief_profiles`. The existing workers register a one-second deadline sweep, recovering persisted clocks after restarts. Deploy API and workers together. Release the matching MCP guide only after Uman with Word Chain support (PR #327) is deployed in the target environment; merging the backend PR alone does not make its Game types available. Link uses the platform's existing AI provider/key/model environment; no new model service is required. Credentialed content-quality evaluation remains a release check.
 
-Authorized platform content operators can enqueue additive prefill through `POST /v2/admin/games/link-up/library/generate` with `type`, `brief` and positive `sets`, and poll `/v2/admin/games/link-up/library/generations/{id}`. This is a manual operation, has no scheduled paid generation and never resets the library. Completed sets remain if a later set fails; automatic paid retries are disabled. The current queue's batch timeout still limits very large manual requests.
+Authorized platform content operators can enqueue additive prefill through `POST /v2/admin/games/word-chain/library/generate` with `type`, `brief` and positive `sets`, and poll `/v2/admin/games/word-chain/library/generations/{id}`. This is a manual operation, has no scheduled paid generation and never resets the library. Completed sets remain if a later set fails; automatic paid retries are disabled. The current queue's batch timeout still limits very large manual requests.

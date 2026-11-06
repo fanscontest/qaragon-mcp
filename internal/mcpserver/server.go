@@ -26,7 +26,7 @@ var guideFiles = map[string]string{
 	"public-mcp":        "public-mcp.md",
 	"find-the-minority": "find-the-minority.md",
 	"fans-say":          "fans-say.md",
-	"link-up":           "link-up.md",
+	"word-chain":        "word-chain.md",
 	"fans-feud":         "fans-feud.md",
 	"community-guess":   "community-guess.md",
 }
@@ -203,7 +203,7 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		}
 		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
 		community := false
-		for _, name := range []string{"non hosted", "self play", "answer board", "word links", "final board", "community contest", "community guess"} {
+		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess"} {
 			if strings.Contains(goalText, name) {
 				community = true
 				break
@@ -216,9 +216,9 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 			if strings.Contains(goalText, "feud") {
 				gameGuide += "\n\nFans Feud / Feud Showdown / Feud Rush guide:\n" + guides["fans-feud"]
 			}
-			for _, name := range []string{"link up", "link_up", "link clash", "link_clash", "link rush", "link_rush"} {
+			for _, name := range []string{"word chain", "word_chain", "link clash", "link_clash", "link rush", "link_rush"} {
 				if strings.Contains(goalText, name) {
-					gameGuide += "\n\nLink Up / Link Clash / Link Rush guide:\n" + guides["link-up"]
+					gameGuide += "\n\nWord Chain / Link Clash / Link Rush guide:\n" + guides["word-chain"]
 					break
 				}
 			}

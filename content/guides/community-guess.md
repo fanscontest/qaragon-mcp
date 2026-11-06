@@ -1,10 +1,10 @@
 # Community word-board contests
 
-Word Links, Fans Say and Fans Feud community variants are ordinary `guess` Contests. They use one prepared answer board and one final answer-list Submission per participant. These are separate from the hosted Games with similarly named content.
+Word Chain, Fans Say and Fans Feud community variants are ordinary `guess` Contests. They use one prepared answer board and one final answer-list Submission per participant. These are separate from the hosted Games with similarly named content. Hosted Word Chain uses the Game API; its community counterpart uses an ordinary Guess Contest. Select the play style explicitly when requesting integration guidance.
 
 ## Select prepared content
 
-`GET /v2/answer-boards?kind=fans_say&limit=20` returns board IDs, prompts and answer counts. Supported kinds are `word_links`, `fans_say` and `fans_feud`. Pass the final returned ID as `after` for another page. The catalog never returns accepted answer text. Creation and gameplay perform no AI calls; generation/review is a separate content-preparation operation.
+`GET /v2/answer-boards?kind=fans_say&limit=20` returns board IDs, prompts and answer counts. Supported kinds are `word_chain`, `fans_say` and `fans_feud`. Pass the final returned ID as `after` for another page. The catalog never returns accepted answer text. Creation and gameplay perform no AI calls; generation/review is a separate content-preparation operation.
 
 Libraries are platform-owned and shared across tenants. Existing hosted draft preparation and community selection use the same content tables. The release adds curated starter boards without replacing existing library records. Empty selections remain empty; there is no runtime generation fallback.
 
@@ -28,7 +28,7 @@ Recommended tenant presets:
 
 | Variant | Clues | Matching |
 | --- | --- | --- |
-| Word Links | `length` | `by_position` |
+| Word Chain | `length` | `by_position` |
 | Fans Say | `initial` | `by_position` |
 | Fans Feud | `hidden` | `any_order` |
 
