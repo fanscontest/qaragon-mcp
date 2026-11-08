@@ -35,6 +35,7 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 		{"community-guess", "Build non-hosted Word Reveal", "final_board"},
 		{"community-guess", "Build Word Reveal", "final_board"},
 		{"community-guess", "Build word_reveal", "final_board"},
+		{"moment", "Build Moment image contests", "format: \"moment\""},
 		{"community-guess", "Build non-hosted Word Chain", "final_board"},
 		{"word-chain", "Host Word Chain", "Link Clash"},
 		{"word-chain", "Host link-clash", "Link Rush"},
