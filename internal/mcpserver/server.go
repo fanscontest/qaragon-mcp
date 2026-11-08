@@ -203,7 +203,7 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		}
 		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
 		community := false
-		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess"} {
+		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess", "word reveal"} {
 			if strings.Contains(goalText, name) {
 				community = true
 				break
