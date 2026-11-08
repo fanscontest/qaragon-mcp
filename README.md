@@ -54,3 +54,5 @@ The word-game guides cover full and standalone offerings: Fans Say, Seven Clues,
 ### Game guide rollout order
 
 Deploy Uman with Fans Feud support (PR #325) before releasing the Fans Feud MCP guide. Merging the backend PR alone does not make its Game types available on the API. Verify the target environment exposes those types before publishing the matching guide and integration prompt.
+
+Community Word Reveal uses `kind=word_reveal` and the `qaragon://guides/community-guess` resource. Fans Say (`type=fans_say`) remains a hosted Game with its own guide. Integration prompts select the community guide for “Word Reveal” or `word_reveal` requests.

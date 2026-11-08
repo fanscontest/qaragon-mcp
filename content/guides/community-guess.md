@@ -1,14 +1,14 @@
 # Community word-board contests
 
-Word Chain, Fans Say and Fans Feud community variants are ordinary `guess` Contests. They use one prepared answer board and one final answer-list Submission per participant. These are separate from the hosted Games with similarly named content. Hosted Word Chain uses the Game API; its community counterpart uses an ordinary Guess Contest. Select the play style explicitly when requesting integration guidance.
+Word Chain, Word Reveal and Fans Feud community variants are ordinary `guess` Contests. They use one prepared answer board and one final answer-list Submission per participant. Word Reveal is the self-play preset; Fans Say (`type=fans_say`) remains the hosted Game. The two reuse prepared question content without sharing Contest or Game state. Hosted Word Chain uses the Game API; its community counterpart uses an ordinary Guess Contest. Select the play style explicitly when requesting integration guidance.
 
 ## Select prepared content
 
-`GET /v2/answer-boards?kind=fans_say&limit=20` returns board IDs, prompts and answer counts. Supported kinds are `word_chain`, `fans_say` and `fans_feud`. Pass the final returned ID as `after` for another page. The catalog never returns accepted answer text. Creation and gameplay perform no AI calls; generation/review is a separate content-preparation operation.
+`GET /v2/answer-boards?kind=word_reveal&limit=20` returns board IDs, prompts and answer counts. Supported kinds are `word_chain`, `word_reveal` and `fans_feud`. Pass the final returned ID as `after` for another page. The catalog never returns accepted answer text. Creation and gameplay perform no AI calls; generation/review is a separate content-preparation operation.
 
 Libraries are platform-owned and shared across tenants. Existing hosted draft preparation and community selection use the same content tables. The release adds curated starter boards without replacing existing library records. Empty selections remain empty; there is no runtime generation fallback.
 
-Feed contest blocks retain `contest_type: "guess"` and include `board_kind` (`word_chain`, `fans_say` or `fans_feud`) for prepared boards. Use that kind for the user-facing game name; `guess` alone does not distinguish the three presets. Public and personalized feed reads obtain the kinds in one batch from Guess configuration, including for existing feed items. This projection reads board references only, without answer keys or additional client requests. A Guess contest without a prepared board has no board kind and should use a generic label.
+Feed contest blocks retain `contest_type: "guess"` and include `board_kind` (`word_chain`, `word_reveal` or `fans_feud`) for prepared boards. Use that kind for the user-facing game name; `guess` alone does not distinguish the three presets. Public and personalized feed reads obtain the kinds in one batch from Guess configuration, including for existing feed items. This projection reads board references only, without answer keys or additional client requests. A Guess contest without a prepared board has no board kind and should use a generic label.
 
 ## Create an ordinary Contest
 
@@ -17,7 +17,7 @@ Use the shared `POST /v2/contests` route with normal Space, title, timing, rewar
 ```json
 {
   "source_type": "guess",
-  "board_id": "fans_say:community-kitchen-v1",
+  "board_id": "word_reveal:community-kitchen-v1",
   "submission_policy": "final_board",
   "matching_rule": "by_position",
   "clue_strategy": "initial_random"
@@ -31,7 +31,7 @@ Recommended tenant presets:
 | Variant | Clues | Matching |
 | --- | --- | --- |
 | Word Chain | `initial_random` | `by_position` |
-| Fans Say | `initial_random` | `by_position` |
+| Word Reveal | `initial_random` | `by_position` |
 | Fans Feud | `hidden` | `any_order` |
 
 Display positions are explicit zero-based positions. `by_position` grades the corresponding slots. `any_order` matches the answer set and scores each accepted answer at most once. Chain relationships belong to the prepared content; they introduce no live unlocking or host transitions. Clue strategy is independent of matching.
