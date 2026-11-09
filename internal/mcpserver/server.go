@@ -29,6 +29,7 @@ var guideFiles = map[string]string{
 	"word-chain":        "word-chain.md",
 	"fans-feud":         "fans-feud.md",
 	"community-guess":   "community-guess.md",
+	"moment":            "moment.md",
 }
 
 // New registers tools, prompts, and resources backed only by public artifacts.
@@ -202,6 +203,9 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 			gameGuide = "\n\nFind the Minority game guide:\n" + guides["find-the-minority"]
 		}
 		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
+		if strings.Contains(goalText, "moment") {
+			gameGuide += "\n\nMoment MCQ variant guide:\n" + guides["moment"]
+		}
 		community := false
 		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess", "word reveal"} {
 			if strings.Contains(goalText, name) {

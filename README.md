@@ -25,7 +25,7 @@ The service expects these files at startup:
 
 Tools: `search_api`, `describe_operation`, `get_sdk_setup`, `list_webhook_events`, and `describe_webhook_event`.
 
-Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`, `qaragon://guides/fans-say` `qaragon://guides/fans-feud` and `qaragon://guides/link-up`.
+Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`, `qaragon://guides/fans-say` `qaragon://guides/fans-feud` and `qaragon://guides/word-chain` and `qaragon://guides/moment`.
 
 Prompt: `build_tenant_integration`.
 
