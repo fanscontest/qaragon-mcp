@@ -24,4 +24,4 @@ Ask your MCP client to find an operation for a feature, explain its schemas, or 
 
 Use `qaragon://guides/community-guess` for non-hosted Word Chain, Word Reveal and Fans Feud community Contests with final-board Guess submissions. Hosted Game guides describe a different workflow.
 
-Read `qaragon://guides/moment` for image-led MCQ Contests using `source_type=mc` and `format=moment`.
+Read `qaragon://guides/moment` for image-led MCQ Contests using `source_type=mc` and `source_variant=moment`.

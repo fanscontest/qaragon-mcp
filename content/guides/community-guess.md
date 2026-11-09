@@ -8,7 +8,7 @@ Word Chain, Word Reveal and Fans Feud community variants are ordinary `guess` Co
 
 Libraries are platform-owned and shared across tenants. Existing hosted draft preparation and community selection use the same content tables. The release adds curated starter boards without replacing existing library records. Empty selections remain empty; there is no runtime generation fallback.
 
-Feed contest blocks retain `contest_type: "guess"` and include `board_kind` (`word_chain`, `word_reveal` or `fans_feud`) for prepared boards. Use that kind for the user-facing game name; `guess` alone does not distinguish the three presets. Public and personalized feed reads obtain the kinds in one batch from Guess configuration, including for existing feed items. This projection reads board references only, without answer keys or additional client requests. A Guess contest without a prepared board has no board kind and should use a generic label.
+Contest details and lists include the persisted `source_variant` (`word_chain`, `word_reveal` or `fans_feud`), alongside `source_type: "guess"`. Feed contest blocks retain `contest_type: "guess"` and use the same `source_variant` field. Use that value for the user-facing experience name. Guess determines it from the selected board during creation; clients may supply the matching value, but a conflict is rejected. Reads do not query Guess configuration or infer a variant from a board reference. A custom Guess contest without a prepared board has no named variant and should use a generic label.
 
 ## Create an ordinary Contest
 
@@ -17,6 +17,7 @@ Use the shared `POST /v2/contests` route with normal Space, title, timing, rewar
 ```json
 {
   "source_type": "guess",
+  "source_variant": "word_reveal",
   "board_id": "word_reveal:community-kitchen-v1",
   "submission_policy": "final_board",
   "matching_rule": "by_position",
@@ -44,7 +45,7 @@ The existing `initial` strategy shows only the first character of each word, and
 
 ## Read and submit
 
-`GET /v2/contests/{id}/guesses` returns the prompt, selected rules, ordered `slots`, `submitted` and `closed`. Prepared boards also include the safe `board_kind` for type labels on Contest Details. Each slot has a position and a masked `clue`. Answers become available after board settlement. `submitted` includes a durable accepted Submission even before its queue worker records Participation, so reopening the screen does not offer another entry.
+`GET /v2/contests/{id}/guesses` returns the prompt, selected rules, ordered `slots`, `submitted` and `closed`. Use the ordinary Contest response's `source_variant` for the experience label; this rules endpoint has no separate type-identification field. Each slot has a position and a masked `clue`. Answers become available after board settlement. `submitted` includes a durable accepted Submission even before its queue worker records Participation, so reopening the screen does not offer another entry.
 
 Each participant edits their draft in the app and sends one final list:
 

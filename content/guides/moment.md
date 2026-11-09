@@ -1,6 +1,6 @@
 # Moment: image-led Quiz contests
 
-Moment is an MCQ format (`source_type: "mc"`, `format: "moment"`), not a hosted Game. It uses the existing Contest lifecycle, Space membership, enrollment, shared submissions, Puzzle grading, ranking and rewards. A normal Quiz can also carry optional images; every Moment question must have one.
+Moment is an MCQ variant (`source_type: "mc"`, `source_variant: "moment"`), not a hosted Game. It uses the existing Contest lifecycle, Space membership, enrollment, shared submissions, Puzzle grading, ranking and rewards. A normal Quiz can also carry optional images; every Moment question must have one.
 
 ## Prepare a source
 
@@ -19,7 +19,7 @@ List sources with `GET /v2/puzzle-sheets?format=moment`. Cloning and owned-sheet
 Create an ordinary Contest with its Space, timing, rewards and MCQ question count:
 
 ```json
-{"source_type":"mc","source_id":"<sheet-id>","format":"moment","no_of_puzzles":5}
+{"source_type":"mc","source_id":"<sheet-id>","source_variant":"moment","no_of_puzzles":5}
 ```
 
 Read the Contest's existing source endpoint (`GET /v2/contest-puzzles/{contest-id}`). It retains images and omits correct answers. Existing MCQ source preparation remains asynchronous; do not interpret Contest creation as confirmation that Puzzle has finished preparing its source.
@@ -30,6 +30,6 @@ Submit all selected option keys through **POST /v2/submissions**, with a Contest
 
 ## Read results
 
-Contest list/detail projections and feed Contest metadata expose `format: "moment"` for labels. The shared domain Contest and scoring rules remain unchanged. Puzzle's graded sheet preserves images so participants can review the question, their selected option and the correct answer after results become available.
+Contest details, lists and feed Contest metadata expose the persisted `source_variant: "moment"` for labels through the normal Contest response. MCQ scoring remains unchanged. The MC module validates the variant at creation; there is no separate metadata lookup. Puzzle's graded sheet preserves images so participants can review the question, their selected option and the correct answer after results become available.
 
 Use `search_api` and `describe_operation` for the complete existing sheet, Contest, source and submission contracts. Tenant credentials remain in the BFF; acting platform identities and tenant ownership use the normal platform rules.

@@ -204,7 +204,7 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		}
 		goalText := strings.NewReplacer("-", " ", "_", " ").Replace(strings.ToLower(goal))
 		if strings.Contains(goalText, "moment") {
-			gameGuide += "\n\nMoment MCQ format guide:\n" + guides["moment"]
+			gameGuide += "\n\nMoment MCQ variant guide:\n" + guides["moment"]
 		}
 		community := false
 		for _, name := range []string{"non hosted", "self play", "answer board", "final board", "community contest", "community guess", "word reveal"} {
