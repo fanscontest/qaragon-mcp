@@ -15,6 +15,7 @@ The endpoint is public and requires no developer account or MCP credential. It p
 ## Available resources and prompt
 
 - `qaragon://api/openapi.json` is the full tenant-facing OpenAPI contract.
+- `qaragon://guides/domain-language` defines Qaragon's platform, access, Contest, Game, Tournament, content, social, sponsorship and integration concepts; `qaragon://guides/contest-rules` explains scoring, submission zones, ranking, grouping, teams and winner selection, including current implementation gaps.
 - `qaragon://guides/tenant-bff`, `qaragon://guides/webhooks`, `qaragon://guides/sdk-go`, and `qaragon://guides/sdk-typescript` provide integration details.
 - `qaragon://guides/find-the-minority` explains the Game API workflow, phases, access rules, retries, and audience voting.
 - `qaragon://guides/public-mcp` explains the MCP itself.

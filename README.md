@@ -31,6 +31,8 @@ Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` doc
 
 Prompt: `build_tenant_integration`.
 
+Qaragon's domain glossary and Contest rules are published as `qaragon://guides/domain-language` and `qaragon://guides/contest-rules`. Every tenant-integration prompt directs the agent to the relevant glossary sections and includes the Contest rules. Their canonical sources are `uman/docs/domain-language.md` and `uman/docs/contest-rules.md`. From the infra checkout, run `task mcp:guides` after updating those sources; `task mcp:contract` also syncs them automatically. Edit the canonical sources rather than the bundled copies. The developer plugin reads the same MCP resources.
+
 The Find the Minority workflow is published as `qaragon://guides/find-the-minority`. Its canonical source is `uman/docs/games/find-the-minority.md`; copy it into `content/guides/find-the-minority.md` when updating the tenant-facing flow. The public OpenAPI bundle is assembled separately from the live service contracts.
 
 ## Configuration

@@ -67,3 +67,5 @@ Version 0.1.0 checks completed on 2026-11-19:
 These checks did not install the plugin into the user's main profile, call tenant mutation endpoints, run a model-assisted Branda implementation, or publish the package.
 
 Keep skill instructions about integration decisions and workflows. API schemas and game details remain in the MCP guides and generated catalog. Add related developer workflows to this plugin as needed; creator-facing live actions or internal administration require their own product and permission design.
+
+Platform terminology and Contest rules come from `qaragon://guides/domain-language` and `qaragon://guides/contest-rules`. The integration skill directs work to the relevant glossary sections and configuration/result work to the rules. The MCP integration prompt references the glossary and includes the Contest rules. Their canonical source is Uman's `docs/`; the infra `mcp:guides` task refreshes the bundled copies. Refresh the installed plugin after a skill change and deploy the updated MCP before testing its new resources through a hosted connection.

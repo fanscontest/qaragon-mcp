@@ -13,6 +13,8 @@ Inspect the existing auth, SDK/transport, identity mapping and UI before choosin
 
 Distinguish an ordinary Contest from a hosted Game. Community Word Chain, Word Reveal and Fans Feud use ordinary Guess Contests; their hosted counterparts use the Game API. For an ambiguous request, establish the play style before choosing routes. A playable Contest does not need a Game wrapper.
 
+Read the relevant [domain glossary](qaragon://guides/domain-language) sections to establish the capability's terms, ownership and relationships. For Contest configuration, grading, zones, ranking, grouping or winners, also read [Contest rules](qaragon://guides/contest-rules). Establish the intended rule and its scope, then check the type's implementation support. Treat an ignored setting as a support gap to resolve, rather than a reason to redefine the mechanic.
+
 ## Consult the current contract
 
 Read [tenant BFF guidance](qaragon://guides/tenant-bff). Call `get_sdk_setup` with `language: "go"` or `"typescript"` when using that SDK. Use `search_api` for the capabilities in this flow and `describe_operation` with each returned `operation_id` before implementing its request or response mapping. The MCP connection's hostname does not choose the tenant application's API environment.

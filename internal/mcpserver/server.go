@@ -19,6 +19,8 @@ const (
 )
 
 var guideFiles = map[string]string{
+	"domain-language":   "domain-language.md",
+	"contest-rules":     "contest-rules.md",
 	"tenant-bff":        "tenant-bff.md",
 	"webhooks":          "webhooks.md",
 	"sdk-go":            "sdk-go.md",
@@ -235,6 +237,7 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 		}
 		text := fmt.Sprintf("Help me design a %s tenant BFF integration for this goal: %s\n\nUse only the supplied public Qaragon contract and integration guidance. The tenant BFF authenticates its own user and enforces its own permissions on every request. It calls Qaragon server-to-server using a tenant API key stored in its own secret configuration and sends X-Acting-As with the platform identity ID when acting for a fan. Never put the tenant API key in a client app or generated source code. The MCP server is documentation-only and does not make Qaragon API calls.\n\nIntegration guide:\n%s\n\nSDK guidance:\n%s%s",
 			language, goal, guides["tenant-bff"], sdkGuideFor(language, guides), gameGuide)
+		text += "\n\nRead the relevant sections of qaragon://guides/domain-language to establish terms, ownership and relationships before choosing the integration flow. Consult qaragon://guides/contest-rules for Contest configuration and result behavior.\n\nContest rules:\n" + guides["contest-rules"]
 		return &mcp.GetPromptResult{
 			Description: "Tenant-owned backend integration plan grounded in Qaragon's public API contract.",
 			Messages:    []*mcp.PromptMessage{{Role: "user", Content: &mcp.TextContent{Text: text}}},
