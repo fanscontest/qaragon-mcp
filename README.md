@@ -4,6 +4,8 @@ Stateless MCP server for tenant developers building applications against Qaragon
 
 The server is documentation-only. It has no developer login, stores no credentials, and makes no Qaragon API calls. Tenant applications continue to call Qaragon from their own BFFs with their own tenant API key and authorization checks.
 
+The [Qaragon Developer plugin](docs/developer-plugin.md) bundles this connection with a tenant-integration skill and examples. It can be installed from this checkout's marketplace for local use in a coding assistant.
+
 ## Local development
 
 This service is a separate platform-owned repository checked out as `infra/mcp`, alongside the `uman`, `puzzle`, and `auth` source repositories.
