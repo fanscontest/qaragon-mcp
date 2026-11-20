@@ -42,6 +42,9 @@ func TestContestConceptsArePublishedAndReferencedInIntegrationPrompts(t *testing
 	if !strings.Contains(text.Text, "Read the relevant sections of qaragon://guides/domain-language") {
 		t.Fatal("integration prompt must direct the agent to the relevant domain vocabulary")
 	}
+	if !strings.Contains(text.Text, "naming rules") {
+		t.Fatal("integration prompt must require the canonical naming rules")
+	}
 
 	for _, guide := range []string{"domain-language", "contest-rules"} {
 		t.Run(guide, func(t *testing.T) {
@@ -51,6 +54,9 @@ func TestContestConceptsArePublishedAndReferencedInIntegrationPrompts(t *testing
 			}
 			if len(resource.Contents) != 1 || resource.Contents[0].Text == "" {
 				t.Fatal("concept guide is empty")
+			}
+			if guide == "domain-language" && !strings.Contains(resource.Contents[0].Text, "## Naming rules") {
+				t.Fatal("published glossary must include the naming rules")
 			}
 			if !strings.Contains(text.Text, guideURIBase+guide) {
 				t.Fatal("integration prompt omitted the published concept guide reference")
