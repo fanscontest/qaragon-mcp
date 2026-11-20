@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "qaragon-developer",
+  "version": "0.1.0",
+  "description": "Build tenant applications on Qaragon using its current API contracts, SDKs and integration guides.",
+  "author": {
+    "name": "Qaragon",
+    "url": "https://qaragon.com"
+  },
+  "repository": "https://github.com/fanscontest/qaragon-mcp",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Qaragon Developer",
+        "shortDescription": "Integrate Qaragon contests and games into your app",
+        "longDescription": "Build and troubleshoot tenant BFF integrations using Qaragon's public documentation MCP, current SDK guidance and one integration workflow. Covers identities, Spaces, Contests, Games, submissions, results and webhooks.",
+        "developerName": "Qaragon",
+        "category": "Developer Tools",
+        "capabilities": ["Read"],
+        "websiteURL": "https://qaragon.com",
+        "defaultPrompt": [
+          "Use Qaragon Developer to add Word Chain community contests to my application.",
+          "Use Qaragon Developer to review my BFF's contest submission and result flow."
+        ]
+      }
+    }
+  }
+}

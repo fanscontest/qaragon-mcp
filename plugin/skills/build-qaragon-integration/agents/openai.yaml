@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build with Qaragon"
+  short_description: "Integrate Qaragon into a tenant BFF and app"
+  default_prompt: "Use $qaragon-developer:build-qaragon-integration to build this feature with Qaragon's current public API."

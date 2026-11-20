@@ -4,6 +4,8 @@ Stateless MCP server for tenant developers building applications against Qaragon
 
 The server is documentation-only. It has no developer login, stores no credentials, and makes no Qaragon API calls. Tenant applications continue to call Qaragon from their own BFFs with their own tenant API key and authorization checks.
 
+The [Qaragon Developer plugin](docs/developer-plugin.md) bundles this connection with a tenant-integration skill and examples. It can be installed from this checkout's marketplace for local use in a coding assistant.
+
 ## Local development
 
 This service is a separate platform-owned repository checked out as `infra/mcp`, alongside the `uman`, `puzzle`, and `auth` source repositories.
@@ -28,6 +30,8 @@ Tools: `search_api`, `describe_operation`, `get_sdk_setup`, `list_webhook_events
 Resources: `qaragon://api/openapi.json` and the curated `qaragon://guides/*` documents, including `qaragon://guides/find-the-minority`, `qaragon://guides/fans-say` `qaragon://guides/fans-feud` and `qaragon://guides/word-chain` and `qaragon://guides/moment`.
 
 Prompt: `build_tenant_integration`.
+
+Qaragon's domain glossary and Contest rules are published as `qaragon://guides/domain-language` and `qaragon://guides/contest-rules`. Every tenant-integration prompt directs the agent to the relevant glossary sections and includes the Contest rules. Their canonical sources are `uman/docs/domain-language.md` and `uman/docs/contest-rules.md`. From the infra checkout, run `task mcp:guides` after updating those sources; `task mcp:contract` also syncs them automatically. Edit the canonical sources rather than the bundled copies. The developer plugin reads the same MCP resources.
 
 The Find the Minority workflow is published as `qaragon://guides/find-the-minority`. Its canonical source is `uman/docs/games/find-the-minority.md`; copy it into `content/guides/find-the-minority.md` when updating the tenant-facing flow. The public OpenAPI bundle is assembled separately from the live service contracts.
 
