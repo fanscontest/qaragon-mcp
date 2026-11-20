@@ -10,13 +10,15 @@ Grading, score adjustment, ranking, tie-breaking, winner selection and reward fu
 
 ## Submission zones
 
+Zone Advantage is available only for MC/Quiz and its Moment variant. It encourages prompt submission where external tools could supply answers. Other primitives reject supplied `zone_advantage`; Prediction ranks raw earned percentages and does not apply zone deductions. Zone configuration is derived by the MC module.
+
 Zones compare authoritative submission timestamps within the same Contest group. A participant's personal start time and queue-processing duration do not determine their zone. With one group, the comparison includes the whole Contest. With several groups, each group's turnout and submission times determine only that group's zone boundaries.
 
 Adding, removing or changing submissions in group B must leave group A's zone assignment and deductions unchanged. This applies to both system and open grouping. Global leaderboard positions may still change as results from other groups enter the leaderboard.
 
 Zone Advantage controls the strength of the deduction configuration. It does not configure ranking tie-breakers. Setting it to zero disables zone deductions while leaving the applicable ranking rule intact.
 
-For MC, Moment and Prediction, the current configuration uses green/blue/orange/red bands of 30%/20%/20%/30%. Deductions are generated from Zone Advantage and the question count: `ceil(zone_index × zone_advantage × 100 / question_count)`, with indices 0–3. Non-green deductions are capped at 32%; if orange exceeds 25%, red uses the orange deduction. Small-group rounding and equal submission timestamps use the existing boundary algorithm. The group-scope correction preserves that algorithm.
+For MC and Moment, the configuration uses green/blue/orange/red bands of 30%/20%/20%/30%. Deductions are generated from Zone Advantage and the question count: `ceil(zone_index × zone_advantage × 100 / question_count)`, with indices 0–3. Non-green deductions are capped at 32%; if orange exceeds 25%, red uses the orange deduction. Small-group rounding and equal submission timestamps use the existing boundary algorithm. The group-scope correction preserves that algorithm.
 
 The deduction is a proportion of the earned percentage score:
 
@@ -38,7 +40,7 @@ Alice ranks above Bob on adjusted score. No tie-break is needed for these entrie
 
 ## Ranking and winning places
 
-The MC/Moment/Prediction result flow is:
+The MC/Moment result flow is:
 
 1. Grade answers to obtain raw points and a raw percentage score.
 2. Determine each participant's zone within their Contest group and apply its deduction.
@@ -47,28 +49,32 @@ The MC/Moment/Prediction result flow is:
 
 Zone Advantage zero still leaves step 3's submission-time tie-break in effect. A queue delay does not replace the accepted timestamp with processing time.
 
+Prediction uses the same percentage-score, submission-time and group-winning-place rules without step 2.
+
 For these types, three groups with two winning places each permit up to six qualifying winners. Empty groups and participants below the minimum score can reduce that count. Other primitives have their own native winner rules; the shared winner-count field alone does not define how ties or qualification work.
 
 ## Grouping, teams and Code Swap rooms
 
-`no_of_groups` divides a Contest into competitive pools. A count of one means one pool. `system` delegates assignment to Qaragon; `open` lets participants choose their pool. In ordinary system-grouped Contests, assignment currently chooses the least-loaded pool at submission. Tournament roster preassignments take precedence when present.
+`no_of_groups` divides a Contest into competitive pools. A count of one means one pool. `system` delegates assignment to Qaragon; `open` lets participants choose their pool. In ordinary system-grouped Contests, assignment chooses the least-loaded pool on the first Participation recorded through shared submission processing. The assignment remains fixed through settlement; there is no closing-time regrouping. Tournament roster preassignments take precedence when present.
+
+MC/Quiz/Moment, Prediction, Guess and Creative support either grouping policy. Groups, members and scores use the same Contest access and result-availability rules as one pool; there is no separate group visibility permission. Empty pools remain visible for participant choice. A first open-group submission must select an existing pool before acceptance; the shared Processor persists that association. Later attempts retain the recorded assignment. Code Swap and Vote use one competitive pool.
 
 A Team Set lets a participant represent a named team independently of their Contest group. Current Contest team results count individual winners by represented team and show each team's share of all winners. Individual winners without a represented team remain in that denominator. Team representation does not change individual grading, winning places or rewards.
 
 Code Swap uses a different cooperative mechanic: members exchange codes within a room, and the room qualifies when its members have completed their check-ins. The first qualifying rooms win as whole rooms. `room_size` and the number of winning rooms determine the shared `winners_per_group` value. For example, two winning rooms of three people configure six winning participants when both rooms are full. Code Swap uses one competitive Contest pool; its rooms are not generic winner pools.
 
-## Current implementation support
+## Supported configuration
 
-| Type or variant | Current native result behavior | Configuration limits or gaps |
-| --- | --- | --- |
-| MC / Moment | Adjusted percentage score, then submission time; qualifying winning places per group. | System or open grouping. Submission zones are group-scoped. |
-| Prediction | Same score-adjustment/ranking flow as MC. | Open grouping or one pool; system grouping is rejected. |
-| Guess final-board, including Word Chain / Word Reveal | Raw score ranking within each group; positive scores at the winning cutoff qualify, including ties. | Zone configuration is currently accepted but unused. Submission time is recorded but does not break score ties. These are implementation facts to assess against the intended product behavior. |
-| CheckIn / Code Swap | First qualifying cooperative rooms win as whole rooms. | One competitive pool; whole-room winner count. Zone configuration is unused. |
-| Creative | Judging-method scores, currently ranked globally; tied scores share ranks. | Generic grouping and zone settings are not applied by settlement. |
-| Vote | Winning options selected by the configured `top_n` or `least_n` strategy. | Its winners are options, rather than voting participants. |
+| Type or variant | Zone Advantage | Competitive grouping | Native winner rule |
+| --- | --- | --- | --- |
+| MC / Quiz / Moment | Optional; zero disables deductions. | One pool, system or open. | Group winning places; minimum adjusted score 25%; equal scores ordered by accepted submission time. |
+| Prediction | Unavailable. | One pool, system or open. | Group winning places; minimum raw percentage 25%; equal scores ordered by accepted submission time. |
+| Guess final-board, including Word Chain / Word Reveal | Unavailable. | One pool, system or open. | Positive scores at the winning cutoff qualify, including ties; time does not break score ties. |
+| Creative | Unavailable. | One pool, system or open. | Judging scores ranked within each recorded pool; ties share ranks. Existing judging-method qualification/quorum still applies. |
+| CheckIn / Code Swap | Unavailable. | One competitive pool; cooperative rooms remain separate. | First qualifying rooms win as whole rooms; `winners_per_group` must be a positive whole multiple of room size. |
+| Vote | Unavailable. | One pool. | Option winners selected by `top_n` or `least_n`; shared participant winner-count edits cannot change this immutable option strategy. |
 
-This table records implementation support. It does not authorize silently removing configured behavior or changing a primitive's tie policy. Confirm intended behavior before changing those mechanics, and update this guide with the implementing change.
+Create and permitted updates delegate configuration validation to the owning module. Updates retain the existing lifecycle/timing restrictions. Creative computes judging scores once over the existing judgment set, then derives global and group ranks without changing the rating model or comparison set. Grouping does not alter Team Sets, rewards or primitive tie policies.
 
 ## Maintenance and verification
 
