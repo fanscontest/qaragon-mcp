@@ -4,6 +4,13 @@ Use these terms in requirements, public documentation, code and reviews across Q
 
 Read the section for the capability being changed and the related concepts it uses. Add or refine terms here when the domain changes, and refresh the MCP bundle through `task mcp:guides` from the infra checkout. Detailed scoring and grouping rules are maintained in `docs/contest-rules.md` and published as `qaragon://guides/contest-rules`.
 
+## Naming rules
+
+- Reuse the canonical term whenever the business meaning is the same. Apply it to domain identifiers, API properties, errors, tests and documentation.
+- Before introducing a domain term, search this glossary and the relevant existing code. Explain the distinct behavior or relationship it represents relative to the closest existing concept. If there is no distinction, use the existing term.
+- Record a genuinely new concept here before implementing it. Resolve ambiguous meanings with the user instead of adding a convenient synonym.
+- Tenant product labels may differ from Qaragon names; document their mapping at the integration boundary. Technical terms such as database connection pools retain their technical meaning.
+
 ## Platform, tenants and identities
 
 | Term | Meaning |
@@ -161,11 +168,11 @@ For a final-board Contest, processed submission recording means the final answer
 
 | Term | Meaning |
 | --- | --- |
-| **Contest group** | A competitive pool within one Contest. Its members compete for that group's winning places. One group means all participants compete in one pool. |
-| **Grouping type** | The policy assigning participants to competitive pools: system assignment or open participant choice. Group count and winning places are separate settings. |
-| **System grouping** | Qaragon assigns each ordinary participant to the least-loaded competitive pool when their first Participation is recorded. The assignment stays fixed. Tournament roster preassignments take precedence. |
-| **Open grouping** | Participants choose their competitive pool when submitting. Group visibility follows Contest visibility; it is not a separate permission. |
-| **Group preassignment** | Establishing a participant's competitive pool before play, such as revealing later Tournament Round groups from the qualified roster. It does not itself grant qualification. |
+| **Contest group** | Participants within one Contest who compete for the same winning places. With one group, all participants compete together. |
+| **Grouping type** | The policy assigning participants to Contest groups: system assignment or open participant choice. Group count and winning places are separate settings. |
+| **System grouping** | Qaragon assigns each ordinary participant to the least-loaded Contest group when their first Participation is recorded. The assignment stays fixed. Tournament roster preassignments take precedence. |
+| **Open grouping** | Participants choose their Contest group when submitting. Group visibility follows Contest visibility; it is not a separate permission. |
+| **Group preassignment** | Establishing a participant's Contest group before play, such as revealing later Tournament Round groups from the qualified roster. It does not itself grant qualification. |
 | **Winners per group** | The winning-place configuration for each Contest group, interpreted with the applicable qualification and tie rules. |
 | **Team** | A named side a participant can represent. An experience can also use teams as its actual competitive rosters; state which meaning applies. |
 | **Team Set** | The named teams participants may represent in a Contest. Representation and competitive grouping are independent concepts. |
