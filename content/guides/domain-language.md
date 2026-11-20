@@ -145,7 +145,7 @@ These state names describe different facts. Each Contest type defines which stat
 | **Submission time** | The authoritative time a participant's submission is accepted. It is distinct from time spent playing or time spent waiting for processing. |
 | **Submission zone** | A band determined by a participant's submission time relative to submissions in the same Contest group. |
 | **Zone penalty** | The score deduction configured for a submission zone. It affects the adjusted score. |
-| **Zone Advantage** | The creation setting controlling the strength of submission-zone deductions, giving earlier submitters an advantage in adjusted scores. |
+| **Zone Advantage** | The MC/Quiz/Moment creation setting controlling the strength of group-scoped submission-zone deductions. It encourages prompt submission; it does not configure ranking tie-breakers and is unavailable on other primitives. |
 | **Ranking** | Ordering competitors using the applicable comparison and tie-breaking rules. It is distinct from grading input or selecting winners. |
 | **Tie-breaking** | Resolving equal ranking values using an additional declared criterion. Whether ties remain shared is part of the applicable ranking/winner rule. |
 | **Winning places** | The configured number of positions from which winners may be selected in a Contest group. Qualification and tie rules determine the actual winner count. |
@@ -163,8 +163,8 @@ For a final-board Contest, processed submission recording means the final answer
 | --- | --- |
 | **Contest group** | A competitive pool within one Contest. Its members compete for that group's winning places. One group means all participants compete in one pool. |
 | **Grouping type** | The policy assigning participants to competitive pools: system assignment or open participant choice. Group count and winning places are separate settings. |
-| **System grouping** | Qaragon assigns participants to Contest groups. |
-| **Open grouping** | Participants choose their Contest group. |
+| **System grouping** | Qaragon assigns each ordinary participant to the least-loaded competitive pool when their first Participation is recorded. The assignment stays fixed. Tournament roster preassignments take precedence. |
+| **Open grouping** | Participants choose their competitive pool when submitting. Group visibility follows Contest visibility; it is not a separate permission. |
 | **Group preassignment** | Establishing a participant's competitive pool before play, such as revealing later Tournament Round groups from the qualified roster. It does not itself grant qualification. |
 | **Winners per group** | The winning-place configuration for each Contest group, interpreted with the applicable qualification and tie rules. |
 | **Team** | A named side a participant can represent. An experience can also use teams as its actual competitive rosters; state which meaning applies. |
