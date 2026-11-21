@@ -60,3 +60,15 @@ The word-game guides cover full and standalone offerings: Fans Say, Seven Clues,
 Deploy Uman with Fans Feud support (PR #325) before releasing the Fans Feud MCP guide. Merging the backend PR alone does not make its Game types available on the API. Verify the target environment exposes those types before publishing the matching guide and integration prompt.
 
 Community Word Reveal uses `kind=word_reveal` and the `qaragon://guides/community-guess` resource. Fans Say (`type=fans_say`) remains a hosted Game with its own guide. Integration prompts select the community guide for “Word Reveal” or `word_reveal` requests.
+
+Shared Word Chain and Word Reveal publication approval is documented at
+`qaragon://guides/content-review`. Qaragon platform administrators review generated
+candidates; tenant app-admin status grants no approval rights. Keep the canonical
+`uman/docs/games/content-review.md` synchronized with `task mcp:guides`.
+
+Recurring community Contest configuration, dated reads and bounded replenishment
+are documented in `qaragon://guides/recurring-contests`, synchronized from the
+canonical Uman guide by `task mcp:guides`. Daily/recurring integration prompts
+include this guide. Global paid generation is disabled unless explicitly configured. Tenants opt in
+separately; FansContest creates its Nigeria preferences once through its own
+bootstrap.

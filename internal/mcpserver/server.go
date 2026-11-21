@@ -19,19 +19,21 @@ const (
 )
 
 var guideFiles = map[string]string{
-	"domain-language":   "domain-language.md",
-	"contest-rules":     "contest-rules.md",
-	"tenant-bff":        "tenant-bff.md",
-	"webhooks":          "webhooks.md",
-	"sdk-go":            "sdk-go.md",
-	"sdk-typescript":    "sdk-typescript.md",
-	"public-mcp":        "public-mcp.md",
-	"find-the-minority": "find-the-minority.md",
-	"fans-say":          "fans-say.md",
-	"word-chain":        "word-chain.md",
-	"fans-feud":         "fans-feud.md",
-	"community-guess":   "community-guess.md",
-	"moment":            "moment.md",
+	"domain-language":    "domain-language.md",
+	"contest-rules":      "contest-rules.md",
+	"tenant-bff":         "tenant-bff.md",
+	"webhooks":           "webhooks.md",
+	"sdk-go":             "sdk-go.md",
+	"sdk-typescript":     "sdk-typescript.md",
+	"public-mcp":         "public-mcp.md",
+	"find-the-minority":  "find-the-minority.md",
+	"fans-say":           "fans-say.md",
+	"word-chain":         "word-chain.md",
+	"fans-feud":          "fans-feud.md",
+	"community-guess":    "community-guess.md",
+	"content-review":     "content-review.md",
+	"recurring-contests": "recurring-contests.md",
+	"moment":             "moment.md",
 }
 
 // New registers tools, prompts, and resources backed only by public artifacts.
@@ -234,6 +236,9 @@ func New(api *catalog.Catalog, guidesDir string) *mcp.Server {
 					break
 				}
 			}
+		}
+		if strings.Contains(goalText, "daily") || strings.Contains(goalText, "recurring") || strings.Contains(goalText, "contest schedule") || strings.Contains(goalText, "replenishment") || strings.Contains(goalText, "every day") || strings.Contains(goalText, "schedule contests") {
+			gameGuide += "\n\nRecurring Contest guide:\n" + guides["recurring-contests"]
 		}
 		text := fmt.Sprintf("Help me design a %s tenant BFF integration for this goal: %s\n\nUse only the supplied public Qaragon contract and integration guidance. The tenant BFF authenticates its own user and enforces its own permissions on every request. It calls Qaragon server-to-server using a tenant API key stored in its own secret configuration and sends X-Acting-As with the platform identity ID when acting for a fan. Never put the tenant API key in a client app or generated source code. The MCP server is documentation-only and does not make Qaragon API calls.\n\nIntegration guide:\n%s\n\nSDK guidance:\n%s%s",
 			language, goal, guides["tenant-bff"], sdkGuideFor(language, guides), gameGuide)
