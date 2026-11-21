@@ -219,7 +219,7 @@ For a final-board Contest, processed submission recording means the final answer
 | **Clue strategy** | The rule that projects an unrevealed answer into its visible clue, such as hidden text, letter slots, an initial or selected letters. |
 | **Word Reveal** | A community self-play Guess Contest using a prepared prompt, masked answer slots and one final answer-list submission. Its board kind is `word_reveal`; Fans Say names the hosted Game with teams, turns and stages. |
 | **Word chain** | An ordered sequence in which adjacent words form meaningful connections, possibly within a theme. Word Chain is also the product name for the hosted and community challenges using this mechanic. The content relationship does not itself require participants to submit in that order. |
-| **Content library** | A collection of approved reusable content items. Reusing an item does not reuse a previous Contest's claims or scores. |
+| **Content library** | A managed collection of reusable content and its review state. Candidates may await review; only approved items are offered for published selection. Reusing an item does not reuse a previous Contest's claims or scores. |
 | **Global content** | Platform-owned catalog content available across tenants. This is distinct from tenant-owned content whose visibility may be public within its permitted scope. |
 | **Content visibility** | Who may discover or use a content item, according to the catalog's permissions. It is distinct from a Space's access policy. |
 
@@ -271,7 +271,7 @@ Community self-play answer boards and hosted Games can reuse the same prepared c
 | **Creator brief** | The creator's request describing the desired subject, audience and character of prepared content. It is input to preparation rather than a live gameplay action. |
 | **Content profile** | Structured selection attributes such as topic tags, language, difficulty, minimum age and cultural context used to match library content to a brief. |
 | **Content draft** | Prepared content awaiting the creator's approval and commitment to a Game. It can be revised before creation under the draft flow. |
-| **Content approval** | The creator's decision to accept a draft for use. It is distinct from the model's review and a Contest's participation state. |
+| **Content approval** | An authorized decision that prepared content may be used for a stated purpose. A creator accepts a private Game draft; library publication requires the library's approval policy. Model review and successful generation do not themselves establish approval. |
 | **Committed content** | The prepared questions, accepted answers and values fixed for a created activity under its rules. Reusing the source library later does not change that commitment. |
 | **Content generation** | Producing candidate questions and answer boards during preparation, potentially with an AI model. |
 | **Content classification** | Assigning a structured profile to a brief or content item so it can be matched with reusable material. |
@@ -280,6 +280,14 @@ Community self-play answer boards and hosted Games can reuse the same prepared c
 | **AI provider** | The service supplying model inference. It provides model execution rather than ownership of Contest or Game rules. |
 | **AI model** | The selected model used for generation, classification, review or evaluation. Different preparation tasks can use the same model. |
 | **Live judging** | Evaluating a gameplay input against committed content during play, potentially using an external model. It is separate from generating or reviewing the content. |
+
+Generated library content may be pending review, approved or rejected. Under
+the initial publication policy, a human content administrator must approve an
+item before it becomes available for published selection. A generation job can
+finish successfully while its output remains pending review. Later automatic
+approval can use the same publication decision; selection continues to require
+approved content. The [content-review guide](qaragon://guides/content-review)
+defines the administrative API and publication gate.
 
 ## Discovery, feeds and social relationships
 
@@ -347,3 +355,9 @@ Community self-play answer boards and hosted Games can reuse the same prepared c
 ## Detailed guidance
 
 Use [Contest rules](qaragon://guides/contest-rules) for scoring and grouping behavior, [tenant integration](qaragon://guides/tenant-bff) for the platform boundary and [webhooks](qaragon://guides/webhooks) for public delivery. [Community Guess](qaragon://guides/community-guess), [Moment](qaragon://guides/moment) and the individual hosted Game guides define their respective flows. Public operation schemas remain the authority for field shapes and permitted request values.
+
+## Daily automation and shared content preparation
+
+A **Contest schedule** is a tenant's opt-in configuration for an independent daily creation job in a Space: creator, local creation/start clocks, weekdays and eligible primitive/variant pairs. A **schedule run** records one attempted local date and its selected type/outcome, including a skipped or failed day. It is execution history, not another Contest or reward lifecycle. Existing ordinary Contests take precedence, including manual ones. The Daily date uses the opening for Quiz/word Contests and the submission deadline for Prediction, whose entry opens immediately. **FansContest Daily** is Branda's presentation of Contests in its configured General Spaces; tenants own their separate participants/results even when source content is shared.
+
+**Content replenishment** is Qaragon's bounded preparation of shared library candidates when its unused approved reserve is low. Generation, publication approval and a tenant's daily creation job are independent. Missing content skips the selected day's attempt without later approval-triggered backfill. The pending-review limit is a pre-batch backlog threshold, not a strict row cap. See [daily automation](qaragon://guides/recurring-contests) and [publication review](qaragon://guides/content-review).

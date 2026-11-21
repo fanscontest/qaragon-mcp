@@ -6,6 +6,8 @@ Word Chain, Word Reveal and Fans Feud community variants are ordinary `guess` Co
 
 `GET /v2/answer-boards?kind=word_reveal&limit=20` returns board IDs, prompts and answer counts. Supported kinds are `word_chain`, `word_reveal` and `fans_feud`. Pass the final returned ID as `after` for another page. The catalog never returns accepted answer text. Creation and gameplay perform no AI calls; generation/review is a separate content-preparation operation.
 
+Word Chain and Word Reveal selection requires library publication approval, including direct board IDs. See [content review](qaragon://guides/content-review) for generation and the platform-admin approval API.
+
 Libraries are platform-owned and shared across tenants. Existing hosted draft preparation and community selection use the same content tables. The release adds curated starter boards without replacing existing library records. Empty selections remain empty; there is no runtime generation fallback.
 
 Contest details and lists include the persisted `source_variant` (`word_chain`, `word_reveal` or `fans_feud`), alongside `source_type: "guess"`. Feed contest blocks retain `contest_type: "guess"` and use the same `source_variant` field. Use that value for the user-facing experience name. Guess determines it from the selected board during creation; clients may supply the matching value, but a conflict is rejected. Reads do not query Guess configuration or infer a variant from a board reference. A custom Guess contest without a prepared board has no named variant and should use a generic label.
