@@ -47,13 +47,13 @@ recovery workflow or keep retrying until it creates something.
 | Selection | Source |
 | --- | --- |
 | Quiz (`mc`) | Puzzle's existing topic/category and per-difficulty availability APIs, then its adhoc community-sheet preparation. Sample up to the configured question count. |
-| Prediction (`prediction`) | Puzzle's visible curated slips whose selected questions are usable and all event kickoffs are future and within today. Clone the selected slip into the tenant/creator's ownership. |
+| Prediction (`prediction`) | Puzzle prepares a tenant-owned slip from the first usable saved event Highlight before the tenant's day ends. It returns only the slip ID, event count and submission deadline. |
 | Word Chain (`guess` / `word_chain`) | Published shared chain boards. |
 | Word Reveal (`guess` / `word_reveal`) | Published multi-answer, general/global-culture boards suitable for all ages in the configured language. |
 
 Code Swap, Moment and Creative are excluded from this automation. Hosted Games
-are separate experiences. Prediction needs a ready curated slip; a raw fixture
-alone is not a ready source for this first version. Missing stock skips the day.
+are separate experiences. Prediction needs a usable published event Highlight and
+normal prediction questions. Missing Highlights or questions skip the day.
 Quiz uses the existing tenant question bank, not AI generation. Word Chain
 currently requires English. `language` selects the word-board library;
 Quiz availability is determined by Puzzle's existing topic bank.
@@ -63,7 +63,14 @@ service network with the verified tenant and configured creator identity.
 Uman does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
 sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
 defaults to `http://puzzle:4000`; override only for a different private topology.
-There is no new public preparation endpoint or remote ingestion job.
+Prediction uses `POST /v2/prediction-slips/from-highlights` with a `before`
+timestamp for the end of the tenant's local day. Puzzle owns Highlight order,
+event materialization, usable-question selection and ordinary slip creation.
+The response is `{data: {id, count, deadline}}`, or `{data: null}` when no
+suitable Highlight exists. The timestamp must be in the future and at most
+25 hours away to support local days across daylight saving changes; Puzzle
+reads only the UTC editions intersecting that window. Neither Uman nor this
+operation performs ingestion or model calls.
 
 ## Configure scheduler settings
 
@@ -176,7 +183,8 @@ It creates once using a stable idempotency key; any existing configuration for
 that Space is retained, including changed title/time or a later disable choice.
 There is no hardcoded email, tenant ID or staging Space ID in application code.
 
-Deploy Qaragon schema/routes and gateway first, then Branda. Once the General
+Deploy Puzzle with the highlighted-slip preparation operation before Uman
+uses it, then deploy the matching Qaragon schema/routes, gateway and Branda. Once the General
 Space map exists, no manual configuration API call is needed for FansContest's
 initial Daily setup. Other tenants/Spaces remain opt-in. Provisioning, reviewer
 assignment, approval of stock and existing queue health checks are in the
