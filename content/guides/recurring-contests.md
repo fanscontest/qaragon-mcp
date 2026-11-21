@@ -93,6 +93,11 @@ Content-Type: application/json
 }
 ```
 
+When the tenant is ready to start automation, send
+`PUT /v2/contest-schedules/{id}` with the returned schedule ID and the full
+settings above, changing `enabled` to `true`. This enables future daily runs at
+the configured creation time.
+
 `GET /v2/contest-schedules` reads the caller's configuration.
 `PUT /v2/contest-schedules/{id}` replaces settings, including `enabled: false`
 to stop future tasks. It does not cancel existing Contests or an already-claimed

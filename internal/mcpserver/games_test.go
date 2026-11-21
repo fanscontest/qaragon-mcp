@@ -32,6 +32,11 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 	for _, test := range []struct{ guide, goal, want string }{
 		{"word-chain", "Build qaragon://guides/word-chain", "Link Clash"},
 		{"recurring-contests", "Build recurring daily contests", "contest-schedules"},
+		{"recurring-contests", "Create a contest every day", "Recurring Contest guide:"},
+		{"recurring-contests", "Schedule contests for our community", "Recurring Contest guide:"},
+		{"recurring-contests", "Offer daily contests", "Recurring Contest guide:"},
+		{"recurring-contests", "Configure a contest schedule", "Recurring Contest guide:"},
+		{"recurring-contests", "Set up content replenishment", "Recurring Contest guide:"},
 		{"community-guess", "Build Word Chain community contests", "one final"},
 		{"community-guess", "Build non-hosted Word Reveal", "final_board"},
 		{"community-guess", "Build Word Reveal", "final_board"},
