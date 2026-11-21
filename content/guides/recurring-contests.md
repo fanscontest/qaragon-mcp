@@ -1,9 +1,14 @@
-# Daily Contest automation
+# Automated Contest Scheduler
 
-Qaragon provides optional daily automation. Each tenant chooses its Space,
-creator, time zone, daily creation clock, Contest timing and eligible types.
-Qaragon stores those choices and runs the jobs. Tenants do not need their own
-scheduler. FansContest Daily is Branda's brand and Home presentation.
+The Automated Contest Scheduler creates one ordinary Contest in a Space on
+selected days when that Space does not already have one for that day. It uses
+existing content and skips the day when suitable content is unavailable.
+
+Each tenant opts in through **scheduler settings**: Space, creator, time zone,
+daily creation clock, Contest timing and eligible types. Qaragon stores those
+settings and runs the jobs. FansContest Daily is Branda's brand and Home
+presentation. A Contest's own schedule remains its participation opening and
+closing times.
 
 ## Daily behavior
 
@@ -60,7 +65,7 @@ sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
 defaults to `http://puzzle:4000`; override only for a different private topology.
 There is no new public preparation endpoint or remote ingestion job.
 
-## Configure a tenant
+## Configure scheduler settings
 
 Use the tenant key and the actual creator's `X-Acting-As`. The caller must have
 ordinary Contest creation authority in the selected Space. One configuration
@@ -93,12 +98,12 @@ Content-Type: application/json
 }
 ```
 
-When the tenant is ready to start automation, send
-`PUT /v2/contest-schedules/{id}` with the returned schedule ID and the full
+When the tenant is ready to enable the Automated Contest Scheduler, send
+`PUT /v2/contest-schedules/{id}` with the returned settings ID and the full
 settings above, changing `enabled` to `true`. This enables future daily runs at
 the configured creation time.
 
-`GET /v2/contest-schedules` reads the caller's configuration.
+`GET /v2/contest-schedules` reads the caller's scheduler settings.
 `PUT /v2/contest-schedules/{id}` replaces settings, including `enabled: false`
 to stop future tasks. It does not cancel existing Contests or an already-claimed
 run. Weekdays use Sunday=0 through Saturday=6; empty means every day. The normal

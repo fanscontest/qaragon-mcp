@@ -66,9 +66,9 @@ Shared Word Chain and Word Reveal publication approval is documented at
 candidates; tenant app-admin status grants no approval rights. Keep the canonical
 `uman/docs/games/content-review.md` synchronized with `task mcp:guides`.
 
-Recurring community Contest configuration, dated reads and bounded replenishment
+The Automated Contest Scheduler, its settings, dated reads and bounded replenishment
 are documented in `qaragon://guides/recurring-contests`, synchronized from the
-canonical Uman guide by `task mcp:guides`. Daily/recurring integration prompts
+canonical Uman guide by `task mcp:guides`. Daily/recurring and scheduler-settings integration prompts
 include this guide. Global paid generation is disabled unless explicitly configured. Tenants opt in
 separately; FansContest creates its Nigeria preferences once through its own
 bootstrap.

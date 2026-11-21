@@ -73,7 +73,7 @@ approve an existing record, and no migration bulk-approves historical AI content
 
 No new provider key or generated SDK release is needed for these opaque BFF
 relays. Publish the updated OpenAPI/MCP contract before external integrations
-depend on the administrative operations. Optional [bounded replenishment and recurring Contests](qaragon://guides/recurring-contests)
+depend on the administrative operations. Optional [bounded replenishment and the Automated Contest Scheduler](qaragon://guides/recurring-contests)
 use these same workers and approval decisions. Global replenishment remains
 disabled until explicitly configured. Tenant daily jobs opt in separately;
 FansContest bootstraps Nigeria without enabling paid generation. Prediction, Quiz, Moment and Creative ingestion
