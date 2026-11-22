@@ -49,7 +49,7 @@ recovery workflow or keep retrying until it creates something.
 | Quiz (`mc`) | Puzzle's existing topic/category and per-difficulty availability APIs, then its adhoc community-sheet preparation. Sample up to the configured question count. |
 | Prediction (`prediction`) | Puzzle prepares a tenant-owned slip from the first usable saved event Highlight before the tenant's day ends. It returns only the slip ID, event count and submission deadline. |
 | Word Chain (`guess` / `word_chain`) | Published shared chain boards. |
-| Word Reveal (`guess` / `word_reveal`) | Published multi-answer, general/global-culture boards suitable for all ages in the configured language. |
+| Word Reveal (`guess` / `word_reveal`) | Published multi-answer boards in the configured language. |
 
 Code Swap, Moment and Creative are excluded from this automation. Hosted Games
 are separate experiences. Prediction needs a usable published event Highlight and
@@ -141,32 +141,38 @@ Lower platform packages remain independent of this experience and concrete Games
 A short transaction claims the dated attempt. Remote source preparation runs
 outside SQL transactions. The final transaction rechecks the Space and commits
 the Contest, primitive content, accepted self-hosting, created outbox event,
-word-board usage and successful run together. Lifecycle/feed hooks follow
+and successful run together. Lifecycle/feed hooks follow
 commit, using existing delivery behavior. A prepared Puzzle sheet/slip can
 remain if later Contest creation fails; no distributed rollback is introduced.
 
 ## Independent content preparation and review
 
-Global content replenishment is independent of the daily job and tenant settings.
+Global library generation is independent of the daily job and tenant settings.
 Qaragon platform admins manage:
 
-- `GET /v2/admin/answer-boards/replenishment`
-- `PUT /v2/admin/answer-boards/replenishment/{word_chain|word_reveal}`
+- `GET /v2/admin/answer-boards/generation`
+- `PUT /v2/admin/answer-boards/generation/{word_chain|word_reveal}`
 
-A policy specifies `brief`, `language`, `difficulty`, `minimum_approved`,
-`pending_limit`, `sets_per_run` and `enabled`. Policies are disabled unless
-explicitly configured. The 02:00 UTC sweep counts unused approved selectable
-boards and queues a bounded batch only below that reserve and the pending
-backlog threshold. The threshold is checked before the batch; one batch can
-exceed it, and later batches pause. Stable kind/date task IDs retained for
-48 hours and disabled paid retries prevent repeated automatic batches.
+Settings specify `brief`, `language`, `difficulty`, `batch_size` and `enabled`.
+Generation is disabled until explicitly configured. At 02:00 UTC, every enabled
+setting queues its requested community-board batch. Library size, previous board
+usage and pending-review counts do not affect generation. Stable kind/date task
+IDs retained for 48 hours and disabled paid retries prevent repeated automatic
+batches.
 
-The existing owning workers generate three chains per Link Rush set, or six
-seven-answer boards plus a hosted tiebreak per Seven Clues set. Deduplication
-can reduce new rows. The single-answer tiebreak is excluded from community
-selection/reserve counts. Generated candidates stay pending human approval;
-a generation finishing does not create a Contest or publish a question.
-See [publication review](qaragon://guides/content-review).
+Word Chain requests a batch of six-word chains through its existing structured
+provider and validation. Word Reveal requests independent seven-answer boards
+through its existing single-board generator and model review. The batch size is
+the number of requested community boards, not hosted Game sets or provider calls.
+Neither operation produces hosted rounds or extra tiebreak questions. Existing
+manual hosted-set generation is unchanged. Validation and deduplication can
+reduce new rows. Candidates stay pending human approval; generation does not
+create a Contest or publish a question. See [publication review](qaragon://guides/content-review).
+
+Daily selects approved compatible boards randomly. Previously selected boards
+remain eligible; Daily neither records usage nor orders by use count/last-used
+time. Word Reveal requires the configured language and multiple answers, with no
+additional blanket age/culture filters. Hosted library selection/usage is separate.
 
 ## Home delivery and FansContest bootstrap
 
@@ -196,6 +202,6 @@ preparation before Uman uses it, followed by the matching Qaragon schema/routes,
 gateway and Branda. Once the General
 Space map exists, no manual configuration API call is needed for FansContest's
 initial Daily setup. Other tenants/Spaces remain opt-in. Provisioning, reviewer
-assignment, approval of stock and existing queue health checks are in the
+assignment, approval of library content and existing queue health checks are in the
 production checklist. No paid model call or live deployment was performed while
 implementing this feature. Renaming Uman and paid-feature billing remain deferred.

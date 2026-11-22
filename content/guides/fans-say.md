@@ -79,7 +79,7 @@ The normal request deadlines remain five minutes for draft operations. Models us
 
 Shared library publication requires separate Qaragon-admin approval. Generated questions start pending; private creator-draft acceptance does not publish them. See [content review](qaragon://guides/content-review).
 
-Library generation is a platform-admin operation, separate from creator drafts and participant submissions. It uses the existing administrator authorization and Asynq worker; optional Qaragon-owned replenishment can enqueue bounded batches through the same worker. See qaragon://guides/recurring-contests.
+Library generation is a platform-admin operation, separate from creator drafts and participant submissions. It uses the existing administrator authorization and Asynq worker; scheduled Qaragon-owned library generation requests community boards through the same preparation service, independently of library size and review backlog. See qaragon://guides/recurring-contests.
 
 ```http
 POST /v2/admin/games/fans-say/library/generate

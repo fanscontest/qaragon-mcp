@@ -38,7 +38,7 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 		{"recurring-contests", "Schedule contests for our community", "Automated Contest Scheduler guide:"},
 		{"recurring-contests", "Offer daily contests", "Automated Contest Scheduler guide:"},
 		{"recurring-contests", "Configure a contest schedule", "Automated Contest Scheduler guide:"},
-		{"recurring-contests", "Set up content replenishment", "Automated Contest Scheduler guide:"},
+		{"recurring-contests", "Set up library generation", "Automated Contest Scheduler guide:"},
 		{"community-guess", "Build Word Chain community contests", "one final"},
 		{"community-guess", "Build non-hosted Word Reveal", "final_board"},
 		{"community-guess", "Build Word Reveal", "final_board"},
