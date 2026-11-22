@@ -63,14 +63,11 @@ service network with the verified tenant and configured creator identity.
 Uman does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
 sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
 defaults to `http://puzzle:4000`; override only for a different private topology.
-Prediction uses `POST /v2/prediction-slips/from-highlights` with a `before`
-timestamp for the end of the tenant's local day. Puzzle owns Highlight order,
-event materialization, usable-question selection and ordinary slip creation.
-The response is `{data: {id, count, deadline}}`, or `{data: null}` when no
-suitable Highlight exists. The timestamp must be in the future and at most
-25 hours away to support local days across daylight saving changes; Puzzle
-reads only the UTC editions intersecting that window. Neither Uman nor this
-operation performs ingestion or model calls.
+Prediction preparation is an internal service operation, unavailable through the
+public gateway or tenant API contract. Puzzle owns Highlight order, event
+materialization, usable-question selection and ordinary slip creation. Uman
+receives only the prepared slip's ID, event count and submission deadline. No
+suitable Highlight skips the day. Preparation performs no ingestion or model calls.
 
 ## Configure scheduler settings
 
