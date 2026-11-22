@@ -174,6 +174,21 @@ remain eligible; Daily neither records usage nor orders by use count/last-used
 time. Word Reveal requires the configured language and multiple answers, with no
 additional blanket age/culture filters. Hosted library selection/usage is separate.
 
+## Ordinary Contest reminders
+
+Daily editions use the same reminders as manually created Contests. Planned-start
+Contests emit `contest.starting_soon`; Prediction emits `contest.ending_soon`
+before submissions close, at the same supported 10/5/1-minute offsets. Immediate
+creation/opening does not send a reminder. Current timing/state guards discard
+stale, cancelled or elapsed deadline occurrences.
+
+Qaragon resolves eligible recipients and dispatches bounded tenant webhook
+batches with stable occurrence IDs. Tenants own consent, copy and device
+delivery. Branda uses its existing `contest.starting_soon` preference and selected
+offsets for both events, labelled **Contest reminders** in the app. The default
+remains ten minutes and the account-wide push switch still applies. There is no
+Daily-specific preference, frequency limit or separate reminder job.
+
 ## Home delivery and FansContest bootstrap
 
 `GET /v2/contest-schedules/contests?region=NG` returns ordinary Contests for
