@@ -63,11 +63,21 @@ service network with the verified tenant and configured creator identity.
 Uman does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
 sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
 defaults to `http://puzzle:4000`; override only for a different private topology.
-Prediction preparation is an internal service operation, unavailable through the
-public gateway or tenant API contract. Puzzle owns Highlight order, event
+Prediction uses `POST /v2/prediction-slips/from-highlights`, also available to
+authenticated tenants through the public gateway. The request contains only
+`before`, the tenant's local day end. Puzzle owns Highlight order, event
 materialization, usable-question selection and ordinary slip creation. Uman
 receives only the prepared slip's ID, event count and submission deadline. No
 suitable Highlight skips the day. Preparation performs no ingestion or model calls.
+
+Shared event content does not determine slip ownership. The prepared slip always
+belongs to the authenticated tenant and acting identity; request-body owner,
+tenant and global flags cannot override them. The gateway verifies the tenant
+key and that `X-Acting-As` belongs to that tenant, replacing supplied downstream
+identity headers. Each tenant backend is responsible for binding its member
+requests to the verified signed-in member. Trusted tenant backends may act for
+their own members; another tenant cannot act for those members. Daily's worker
+uses its saved creator identity, not an owner selected in a preparation request.
 
 ## Configure scheduler settings
 
@@ -180,8 +190,10 @@ It creates once using a stable idempotency key; any existing configuration for
 that Space is retained, including changed title/time or a later disable choice.
 There is no hardcoded email, tenant ID or staging Space ID in application code.
 
-Deploy Puzzle with the highlighted-slip preparation operation before Uman
-uses it, then deploy the matching Qaragon schema/routes, gateway and Branda. Once the General
+Deploy Auth's original-request-method fix first, so actor-less writes cannot
+inherit the tenant's discovery owner. Then deploy Puzzle with highlighted-slip
+preparation before Uman uses it, followed by the matching Qaragon schema/routes,
+gateway and Branda. Once the General
 Space map exists, no manual configuration API call is needed for FansContest's
 initial Daily setup. Other tenants/Spaces remain opt-in. Provisioning, reviewer
 assignment, approval of stock and existing queue health checks are in the
