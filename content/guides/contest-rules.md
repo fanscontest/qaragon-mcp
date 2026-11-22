@@ -78,6 +78,6 @@ Create and permitted updates delegate configuration validation to the owning mod
 
 ## Maintenance and verification
 
-The canonical sources are Uman's `docs/domain-language.md` and this guide. The infra task `mcp:guides` copies them unchanged into the MCP bundle; `mcp:contract` runs that task when preparing the developer catalog. MCP publishes both resources. Its tenant-integration prompt directs agents to the relevant glossary sections and includes the Contest rules. The developer plugin reads them from MCP rather than maintaining another set of rules.
+The canonical sources are Core's `docs/domain-language.md` and this guide. The infra task `mcp:guides` copies them unchanged into the MCP bundle; `mcp:contract` runs that task when preparing the developer catalog. MCP publishes both resources. Its tenant-integration prompt directs agents to the relevant glossary sections and includes the Contest rules. The developer plugin reads them from MCP rather than maintaining another set of rules.
 
 When changing grading, zones, grouping or winner selection, update the relevant rule and add a behavior test. The Puzzle regression tests cover group independence, single-group boundaries, disabled deductions and final ranking/winner selection. MCP tests verify that both documents can be read and are included in integration prompts.

@@ -60,13 +60,13 @@ Quiz availability is determined by Puzzle's existing topic bank.
 
 `platform/content/puzzlecatalog` calls Puzzle's existing APIs over the private
 service network with the verified tenant and configured creator identity.
-Uman does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
+Core does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
 sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
 defaults to `http://puzzle:4000`; override only for a different private topology.
 Prediction uses `POST /v2/prediction-slips/from-highlights`, also available to
 authenticated tenants through the public gateway. The request contains only
 `before`, the tenant's local day end. Puzzle owns Highlight order, event
-materialization, usable-question selection and ordinary slip creation. Uman
+materialization, usable-question selection and ordinary slip creation. Core
 receives only the prepared slip's ID, event count and submission deadline. No
 suitable Highlight skips the day. Preparation performs no ingestion or model calls.
 
@@ -213,10 +213,10 @@ There is no hardcoded email, tenant ID or staging Space ID in application code.
 
 Deploy Auth's original-request-method fix first, so actor-less writes cannot
 inherit the tenant's discovery owner. Then deploy Puzzle with highlighted-slip
-preparation before Uman uses it, followed by the matching Qaragon schema/routes,
+preparation before Core uses it, followed by the matching Qaragon schema/routes,
 gateway and Branda. Once the General
 Space map exists, no manual configuration API call is needed for FansContest's
 initial Daily setup. Other tenants/Spaces remain opt-in. Provisioning, reviewer
 assignment, approval of library content and existing queue health checks are in the
 production checklist. No paid model call or live deployment was performed while
-implementing this feature. Renaming Uman and paid-feature billing remain deferred.
+implementing this feature. Renaming Core and paid-feature billing remain deferred.

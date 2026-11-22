@@ -64,7 +64,7 @@ relays all operations as its signed-in caller. The entry appears only after a
 Qaragon-authorized review read succeeds, rather than checking the app's admin
 flag. Qaragon authorizes every read and write independently of UI visibility.
 
-Deploy the Uman schema and verified-identity admin-header correction, then
+Deploy the Core schema and verified-identity admin-header correction, then
 Branda's relays, before testing the app. Normal migration adds review columns
 to `word_chain_library` and `fans_say_library`; existing rows default to pending.
 Review them before enabling automatic Contest selection. Newly inserted curated
