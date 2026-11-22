@@ -360,7 +360,7 @@ Use [Contest rules](qaragon://guides/contest-rules) for scoring and grouping beh
 
 The **Automated Contest Scheduler** creates one ordinary Contest in a Space on selected days when that Space has no ordinary, non-cancelled Contest for that day. It selects one enabled type at random and uses existing content; missing content skips the day without backfill. Existing Contests take precedence, including manual ones.
 
-**Scheduler settings** are the tenant's opt-in configuration: Space, creator, local creation/start clocks, time zone, weekdays and eligible primitive/variant pairs. A **scheduler run** records one attempted local date and its selected type/outcome, including a skipped or failed day. It is execution history, not another Contest or reward lifecycle. **Contest schedule** retains its lifecycle meaning: one Contest's participation opening and closing times.
+**Scheduler settings** are the tenant's opt-in configuration: Space, creator, local creation/start clocks, time zone, weekdays and eligible primitive/variant pairs. A **scheduler run** records one attempted local date and its selected type/outcome, including a skipped or failed day. It is execution history, not another Contest or reward lifecycle. **Contest schedule** retains its lifecycle meaning: one Contest's participation opening and closing times. The public automation resource is `/v2/contest-schedulers`, distinct from those participation times.
 
 The Daily date uses the opening for Quiz/word Contests and the submission deadline for Prediction, whose entry opens immediately. **FansContest Daily** is Branda's presentation of Contests in its configured General Spaces; tenants own their separate participants/results even when source content is shared.
 

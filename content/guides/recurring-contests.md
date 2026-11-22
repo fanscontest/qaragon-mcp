@@ -88,7 +88,7 @@ not opted in automatically. Qaragon platform-admin rights are not needed to
 configure a tenant's own automation.
 
 ```http
-POST /v2/contest-schedules
+POST /v2/contest-schedulers
 Content-Type: application/json
 
 {
@@ -113,12 +113,12 @@ Content-Type: application/json
 ```
 
 When the tenant is ready to enable the Automated Contest Scheduler, send
-`PUT /v2/contest-schedules/{id}` with the returned settings ID and the full
+`PUT /v2/contest-schedulers/{id}` with the returned settings ID and the full
 settings above, changing `enabled` to `true`. This enables future daily runs at
 the configured creation time.
 
-`GET /v2/contest-schedules` reads the caller's scheduler settings.
-`PUT /v2/contest-schedules/{id}` replaces settings, including `enabled: false`
+`GET /v2/contest-schedulers` reads the caller's scheduler settings.
+`PUT /v2/contest-schedulers/{id}` replaces settings, including `enabled: false`
 to stop future tasks. It does not cancel existing Contests or an already-claimed
 run. Weekdays use Sunday=0 through Saturday=6; empty means every day. The normal
 opening must follow the creation clock. Prediction uses an immediate opening
@@ -191,7 +191,7 @@ Daily-specific preference, frequency limit or separate reminder job.
 
 ## Home delivery and FansContest bootstrap
 
-`GET /v2/contest-schedules/contests?region=NG` returns ordinary Contests for
+`GET /v2/contest-schedulers/contests?region=NG` returns ordinary Contests for
 today from the tenant's configured country, containing-continent and Worldwide
 Spaces. It includes manual and automatic editions. Omit `region` for Worldwide
 only. Cancelled, deleted and managed Contests are omitted. Disabling automation

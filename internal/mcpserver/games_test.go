@@ -31,7 +31,7 @@ func TestGameGuidesArePublishedAndIncludedInIntegrationPrompts(t *testing.T) {
 	defer session.Close()
 	for _, test := range []struct{ guide, goal, want string }{
 		{"word-chain", "Build qaragon://guides/word-chain", "Link Clash"},
-		{"recurring-contests", "Build recurring daily contests", "contest-schedules"},
+		{"recurring-contests", "Build recurring daily contests", "contest-schedulers"},
 		{"recurring-contests", "Configure the Automated Contest Scheduler", "Automated Contest Scheduler guide:"},
 		{"recurring-contests", "Configure scheduler settings for our Space", "Automated Contest Scheduler guide:"},
 		{"recurring-contests", "Create a contest every day", "Automated Contest Scheduler guide:"},
