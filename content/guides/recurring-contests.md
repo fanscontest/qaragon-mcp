@@ -133,7 +133,7 @@ preferences apply. No Daily opt-out or new notification campaign is added.
 ## Architecture and transaction
 
 `experiences/recurringcontests` owns tenant configuration, dated attempts and
-content selection. `platform/contests/creation.Creator` prepares/persists ordinary
+content selection. `platform/contests/creation.Service` prepares/persists ordinary
 Contests for both HTTP and automation. Application wiring binds repositories,
 content clients, queue infrastructure and existing lifecycle/feed callbacks.
 Lower platform packages remain independent of this experience and concrete Games.
