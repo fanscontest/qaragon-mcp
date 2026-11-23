@@ -8,7 +8,7 @@ The [Qaragon Developer plugin](docs/developer-plugin.md) bundles this connection
 
 ## Local development
 
-This service is a separate platform-owned repository checked out as `infra/mcp`, alongside the `core`, `content`, and `auth` source repositories.
+This service is a separate platform-owned repository checked out as `ivt/qaragon/mcp`, beside `infra`, `core`, `content` and `auth`. Paths in the command below are relative to this checkout.
 
 ```sh
 cd ../infra
