@@ -46,8 +46,8 @@ recovery workflow or keep retrying until it creates something.
 
 | Selection | Source |
 | --- | --- |
-| Quiz (`mc`) | Puzzle's existing topic/category and per-difficulty availability APIs, then its adhoc community-sheet preparation. Sample up to the configured question count. |
-| Prediction (`prediction`) | Puzzle prepares a tenant-owned slip from the first usable saved event Highlight before the tenant's day ends. It returns only the slip ID, event count and submission deadline. |
+| Quiz (`mc`) | Content's existing topic/category and per-difficulty availability APIs, then its adhoc community-sheet preparation. Sample up to the configured question count. |
+| Prediction (`prediction`) | Content prepares a tenant-owned slip from the first usable saved event Highlight before the tenant's day ends. It returns only the slip ID, event count and submission deadline. |
 | Word Chain (`guess` / `word_chain`) | Published shared chain boards. |
 | Word Reveal (`guess` / `word_reveal`) | Published multi-answer boards in the configured language. |
 
@@ -56,16 +56,16 @@ are separate experiences. Prediction needs a usable published event Highlight an
 normal prediction questions. Missing Highlights or questions skip the day.
 Quiz uses the existing tenant question bank, not AI generation. Word Chain
 currently requires English. `language` selects the word-board library;
-Quiz availability is determined by Puzzle's existing topic bank.
+Quiz availability is determined by Content's existing topic bank.
 
-`platform/content/puzzlecatalog` calls Puzzle's existing APIs over the private
+`platform/content/contentcatalog` calls Content's existing APIs over the private
 service network with the verified tenant and configured creator identity.
-Core does not query OpenSearch, Puzzle SQL or API-Football. Puzzle owns topic
-sampling, sheet/slip preparation and source validation. `PUZZLE_SERVICE_URL`
-defaults to `http://puzzle:4000`; override only for a different private topology.
+Core does not query OpenSearch, Content SQL or API-Football. Content owns topic
+sampling, sheet/slip preparation and source validation. `CONTENT_SERVICE_URL`
+defaults to `http://content:4000`; override only for a different private topology.
 Prediction uses `POST /v2/prediction-slips/from-highlights`, also available to
 authenticated tenants through the public gateway. The request contains only
-`before`, the tenant's local day end. Puzzle owns Highlight order, event
+`before`, the tenant's local day end. Content owns Highlight order, event
 materialization, usable-question selection and ordinary slip creation. Core
 receives only the prepared slip's ID, event count and submission deadline. No
 suitable Highlight skips the day. Preparation performs no ingestion or model calls.
@@ -212,7 +212,7 @@ that Space is retained, including changed title/time or a later disable choice.
 There is no hardcoded email, tenant ID or staging Space ID in application code.
 
 Deploy Auth's original-request-method fix first, so actor-less writes cannot
-inherit the tenant's discovery owner. Then deploy Puzzle with highlighted-slip
+inherit the tenant's discovery owner. Then deploy Content with highlighted-slip
 preparation before Core uses it, followed by the matching Qaragon schema/routes,
 gateway and Branda. Once the General
 Space map exists, no manual configuration API call is needed for FansContest's
