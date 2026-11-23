@@ -21,7 +21,7 @@ For a new local install from the CLI, `codex plugin remove qaragon-developer@qar
 Once this branch is merged/pushed, developers can add the repository marketplace instead of a local checkout:
 
 ```sh
-codex plugin marketplace add fanscontest/qaragon-mcp
+codex plugin marketplace add qaragon/mcp
 codex plugin add qaragon-developer@qaragon
 ```
 

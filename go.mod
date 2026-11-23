@@ -1,4 +1,4 @@
-module github.com/fanscontest/qaragon-mcp
+module github.com/qaragon/mcp
 
 go 1.25.0
 

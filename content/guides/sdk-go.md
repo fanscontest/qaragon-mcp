@@ -1,9 +1,9 @@
 # Go SDK setup
 
-The Qaragon Go SDK module is `github.com/fanscontest/platform-sdk-go`. Its generated API client follows the merged public OpenAPI contract and includes webhook verification helpers.
+The Qaragon Go SDK module is `github.com/qaragon/platform-sdk-go`. Its generated API client follows the merged public OpenAPI contract and includes webhook verification helpers.
 
 ```sh
-go get github.com/fanscontest/platform-sdk-go@latest
+go get github.com/qaragon/platform-sdk-go@latest
 ```
 
 Use the package's generated configuration to set the Qaragon API base URL and bearer API key from server-side configuration. Keep the `fcn_*` key in a secret manager or environment injection; do not commit it or ship it to a client app. For fan-scoped operations, set `X-Acting-As` to the authorized PIID.
