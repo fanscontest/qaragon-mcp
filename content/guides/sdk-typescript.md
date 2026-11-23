@@ -1,11 +1,11 @@
 # TypeScript SDK setup
 
-The Qaragon TypeScript SDK package is `@fanscontest/platform-sdk`. It is distributed through GitHub Packages when published.
+The Qaragon TypeScript SDK package is `@qaragon/platform-sdk`. It is distributed through GitHub Packages when published.
 
-Configure the GitHub Packages registry for the `@fanscontest` scope using the installation instructions for the current package release, then install:
+Configure the GitHub Packages registry for the `@qaragon` scope using the installation instructions for the current package release, then install:
 
 ```sh
-npm install @fanscontest/platform-sdk
+npm install @qaragon/platform-sdk
 ```
 
 Use the SDK only in a tenant server/BFF for requests that need the tenant API key. Keep the `fcn_*` key in server-side secret configuration; never bundle it into browser or mobile code. For fan-scoped operations, send `X-Acting-As` with an authorized PIID.

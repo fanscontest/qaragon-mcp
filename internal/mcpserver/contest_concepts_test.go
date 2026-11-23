@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fanscontest/qaragon-mcp/internal/catalog"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/qaragon/mcp/internal/catalog"
 )
 
 func TestContestConceptsArePublishedAndReferencedInIntegrationPrompts(t *testing.T) {

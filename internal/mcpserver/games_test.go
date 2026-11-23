@@ -2,8 +2,8 @@ package mcpserver
 
 import (
 	"context"
-	"github.com/fanscontest/qaragon-mcp/internal/catalog"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/qaragon/mcp/internal/catalog"
 	"net/url"
 	"os"
 	"regexp"

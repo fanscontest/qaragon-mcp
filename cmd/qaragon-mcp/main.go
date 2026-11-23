@@ -16,9 +16,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/fanscontest/qaragon-mcp/internal/catalog"
-	"github.com/fanscontest/qaragon-mcp/internal/mcpserver"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/qaragon/mcp/internal/catalog"
+	"github.com/qaragon/mcp/internal/mcpserver"
 )
 
 const (

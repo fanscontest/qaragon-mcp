@@ -1,6 +1,6 @@
 # Go SDK examples
 
-Call `get_sdk_setup` with `language: "go"` for current installation guidance. These server-side examples use the public `github.com/fanscontest/platform-sdk-go` package. Confirm the installed release's generated method names against the operation returned by `describe_operation`.
+Call `get_sdk_setup` with `language: "go"` for current installation guidance. These server-side examples use the public `github.com/qaragon/platform-sdk-go` package. Confirm the installed release's generated method names against the operation returned by `describe_operation`.
 
 ## List Spaces for an authorized identity
 
@@ -12,7 +12,7 @@ package integration
 import (
     "context"
 
-    platform "github.com/fanscontest/platform-sdk-go"
+    platform "github.com/qaragon/platform-sdk-go"
 )
 
 func NewClient(apiOrigin string) *platform.APIClient {
@@ -43,7 +43,7 @@ package integration
 import (
     "time"
 
-    platform "github.com/fanscontest/platform-sdk-go"
+    platform "github.com/qaragon/platform-sdk-go"
 )
 
 func VerifyWebhook(signingSecret, signatureHeader string, rawBody []byte, now time.Time) error {
