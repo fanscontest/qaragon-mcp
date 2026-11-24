@@ -14,6 +14,10 @@ Pre-enrollment uses the shared admission rules for every Contest type. Before re
 
 The `member_can_enroll` advisory uses the same access and eligibility decision as the enrollment endpoint. A rejected registration creates no enrollment and cannot enter a downstream enrolled roster, such as Code Swap room formation. Enrollment remains separate from accepted participation: registering does not bypass the existing first-submission admission check or establish durable entry.
 
+Enrollment and submissions resolve their Participation Space through `contests.HostingService`. An explicit `space_id` requires an accepted, participation-enabled hosting in the requesting tenant’s Space and Venue; omission selects the Contest’s home Space. Eligibility and access are evaluated through the resolved Participation Space without changing the Contest’s own Space.
+
+One enrollment is stored per identity and Contest, with its Participation Space and identity tenant. Retrying in the same Space returns that record; a different Space requires withdrawal first. Code Swap preparation retains that Space and tenant on Participation. The Contest owner may read its full roster across accepted hostings; a hosting tenant cannot read other tenants’ enrollments. Room reads resolve the caller’s hosting before accessing Contest-owned mechanics. Reminder recipients are evaluated in their own tenants and routed only to their respective tenant webhooks. Withdrawal removes only the caller’s tenant-scoped registration and remains possible after revocation.
+
 ## Submission zones
 
 Zone Advantage is available only for MC/Quiz and its Moment variant. It encourages prompt submission where external tools could supply answers. Other primitives reject supplied `zone_advantage`; Prediction ranks raw earned percentages and does not apply zone deductions. Zone configuration is derived by the MC module.
