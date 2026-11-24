@@ -94,7 +94,7 @@ Several questions, answer slots or guesses can form one Contest. A linked compet
 | **Roster** | The identified people committed to a Game, Stage or team, including an order when turn-taking depends on it. |
 | **Audience** | People observing a Game who can contribute the audience interactions its rules permit. Audience participation is distinct from the players' actions. |
 | **Audience poll** | A Game-defined question or vote offered to its audience. The Game determines how the audience result influences its experience. |
-| **Enrollment** | Registration for a Contest whose mechanic requires an enrolled roster. It is distinct from joining a Space and submitting an answer. |
+| **Enrollment** | Registration for a Contest whose mechanic requires an enrolled roster. Registration applies shared Space access, blocks, experience qualification and the tenant-enabled eligibility rules before admitting the member. It is distinct from joining a Space and submitting an answer. |
 | **Participation eligibility** | The Contest's rules determining who may enter, such as participation history or allowed regions. |
 | **Admission** | The decision whether an identity may enter through a given Space, accounting for access, membership, enrollment, eligibility and any experience qualification. |
 | **Eligibility preset** | A named bundle of optional Contest eligibility rules, such as new members only or participants who have not won. |
