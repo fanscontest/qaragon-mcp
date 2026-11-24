@@ -61,7 +61,7 @@ Read the section for the capability being changed and the related concepts it us
 | **Managed Contest** | A Contest whose lifecycle and use are controlled by an enclosing experience. Its participant actions and results remain under that experience's contract. |
 | **Contest Space** | The Space associated with the Contest itself. Authorized hosting can make the same Contest available through additional Spaces. |
 | **Contest hosting** | An authorized association allowing another Space to display a Contest or admit participation in it, according to the hosting permissions. It does not create a copy of the Contest. |
-| **Participation Space** | The Space through which a participant enters a Contest. It can differ from the Contest's own Space when hosting permits it. |
+| **Participation Space** | The Space through which a participant enters or pre-enrolls in a Contest. It can differ from the Contest’s own Space, including across tenants, when hosting permits it. Enrollment retains this Space for later admission and room preparation. |
 | **Cross-tenant hosting** | An authorized hosting arrangement in which the additional Space belongs to another tenant. Each tenant retains its own ownership boundary. |
 | **Self-play** | Play in which a participant progresses under the Contest's rules without a human host directing their actions. Participants can play alone or independently against others. |
 | **Personal Contest** | A Contest reserved for one PlatformIdentity. It can belong to an existing Space; it does not imply a personal Space. |
