@@ -18,6 +18,8 @@ Enrollment and submissions resolve their Participation Space through `contests.H
 
 One enrollment is stored per identity and Contest, with its Participation Space and identity tenant. Retrying in the same Space returns that record; a different Space requires withdrawal first. Code Swap preparation retains that Space and tenant on Participation. The Contest owner may read its full roster across accepted hostings; a hosting tenant cannot read other tenants’ enrollments. Room reads resolve the caller’s hosting before accessing Contest-owned mechanics. Reminder recipients are evaluated in their own tenants and routed only to their respective tenant webhooks. Withdrawal removes only the caller’s tenant-scoped registration and remains possible after revocation.
 
+Core’s shared `HostingService` also resolves the Participation Space from a saved enrollment. Shared `ParticipationService` owns preparing Participation from recorded enrollments and Contest-owner-authorized Participation reads/result updates across tenants. Contest types reuse these operations while retaining their own mechanics and visibility rules.
+
 ## Submission zones
 
 Zone Advantage is available only for MC/Quiz and its Moment variant. It encourages prompt submission where external tools could supply answers. Other primitives reject supplied `zone_advantage`; Prediction ranks raw earned percentages and does not apply zone deductions. Zone configuration is derived by the MC module.
