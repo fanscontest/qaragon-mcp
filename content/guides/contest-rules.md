@@ -8,6 +8,12 @@ For each setting, establish its intended effect, its scope, the Contest type's s
 
 Grading, score adjustment, ranking, tie-breaking, winner selection and reward fulfillment are separate decisions. Preserve their meanings when deciding which controls to expose. A hosted Game may define its own team outcome above a primitive's native result.
 
+## Pre-enrollment admission
+
+Pre-enrollment uses the shared admission rules for every Contest type. Before recording registration, check Space access and membership, creator blocks, mandatory experience qualification and the tenant-enabled configured eligibility rules. The enrollment window and the requirement for the Contest to use enrollment also apply. Registration does not require an existing enrollment; actual participation still does unless the experience supplies an enrollment exemption.
+
+The `member_can_enroll` advisory uses the same access and eligibility decision as the enrollment endpoint. A rejected registration creates no enrollment and cannot enter a downstream enrolled roster, such as Code Swap room formation. Enrollment remains separate from accepted participation: registering does not bypass the existing first-submission admission check or establish durable entry.
+
 ## Submission zones
 
 Zone Advantage is available only for MC/Quiz and its Moment variant. It encourages prompt submission where external tools could supply answers. Other primitives reject supplied `zone_advantage`; Prediction ranks raw earned percentages and does not apply zone deductions. Zone configuration is derived by the MC module.
