@@ -67,11 +67,9 @@ For these types, three groups with two winning places each permit up to six qual
 
 ## Bonus rewards
 
-A Contest may offer named bonus rewards alongside its main reward. For each bonus, completion checks whether the participant's saved final group rank appears in the configured position list and records the matching bonus ID. This is a pass-through of the existing rank: it adds no ranking, tie-breaking, qualification or recipient-selection rules.
+A Contest offers exactly one main reward (`awarded_to: contest_winners`). Its winners follow the game’s existing rules and winners per group. An additional positional reward (`awarded_to: group_positions`) goes to every Participation whose final saved group rank appears in its list. MC/Quiz/Moment, Prediction, Guess and Creative assign positions. Code Swap and Vote support the main reward.
 
-Only mechanics that assign final participant positions support positional bonuses. MC/Quiz/Moment, Prediction, Guess and Creative support them; Code Swap and Vote do not. Main winner counts, winner history and tournament advancement keep their existing meanings. The main winner flag does not affect the bonus match.
-
-Bonus names are optional in requests; blank names become **Bonus Reward**. Reward details use the existing Reward payload and per-recipient meaning. Tenants display and fulfill the saved awards; the creator recipient view includes bonus-only winners as well as main winners.
+A blank bonus name becomes **Bonus Reward**. Core records all earned rewards at completion and exposes them on the Participation. Winner history and tournament advancement use the Contest winner outcome. The completion job reevaluates each Contest winner’s eligibility in their own tenant and Participation Space.
 
 ## Grouping, teams and Code Swap rooms
 

@@ -160,7 +160,8 @@ These state names describe different facts. Each Contest type defines which stat
 | **Winner** | A participant, option or side selected by the Contest's or enclosing experience's winner rule. Finishing a challenge does not automatically mean winning it. |
 | **Reward** | The benefit or recognition offered under a Contest’s reward configuration, including bragging rights without a material prize. Reward fulfillment is separate from winner selection. |
 | **Main reward** | The Contest reward offered to its existing winners. |
-| **Bonus reward** | A named additional reward offered when a participant’s final group rank appears in its configured position list. It uses the existing rank without changing ranking or the main winner outcome. |
+| **Bonus reward** | A named reward earned when the participant’s saved final group rank appears in the configured positions. |
+| **Reward recipient** | A Participation that earned a specific Contest reward. A Participation can earn the main reward, positional rewards, or both. |
 
 “Submission processed,” “participant finished” and “Contest completed” describe different facts. A processed guess can leave the participant playing, and one participant finishing a Shared Contest does not end everyone else's play.
 
