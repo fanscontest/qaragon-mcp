@@ -65,6 +65,14 @@ Prediction uses the same percentage-score, submission-time and group-winning-pla
 
 For these types, three groups with two winning places each permit up to six qualifying winners. Empty groups and participants below the minimum score can reduce that count. Other primitives have their own native winner rules; the shared winner-count field alone does not define how ties or qualification work.
 
+## Bonus rewards
+
+A Contest may offer named bonus rewards alongside its main reward. For each bonus, completion checks whether the participant's saved final group rank appears in the configured position list and records the matching bonus ID. This is a pass-through of the existing rank: it adds no ranking, tie-breaking, qualification or recipient-selection rules.
+
+Only mechanics that assign final participant positions support positional bonuses. MC/Quiz/Moment, Prediction, Guess and Creative support them; Code Swap and Vote do not. Main winner counts, winner history and tournament advancement keep their existing meanings. The main winner flag does not affect the bonus match.
+
+Bonus names are optional in requests; blank names become **Bonus Reward**. Reward details use the existing Reward payload and per-recipient meaning. Tenants display and fulfill the saved awards; the creator recipient view includes bonus-only winners as well as main winners.
+
 ## Grouping, teams and Code Swap rooms
 
 `no_of_groups` sets the number of groups in a Contest. A count of one means one group. `system` delegates assignment to Qaragon; `open` lets participants choose their group. In ordinary system-grouped Contests, assignment chooses the least-loaded group on the first Participation recorded through shared submission processing. The assignment remains fixed through settlement; there is no closing-time regrouping. Tournament roster preassignments take precedence when present.
